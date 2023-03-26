@@ -47,21 +47,21 @@
                                                     <state key="normal" image="Button like ON"/>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="22 марта 2023" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IiC-3Q-PYq" userLabel="Date Label">
-                                                    <rect key="frame" x="24" y="212" width="93" height="16"/>
+                                                    <rect key="frame" x="24" y="196" width="93" height="16"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="IiC-3Q-PYq" firstAttribute="bottom" secondItem="e9R-Fo-1Xu" secondAttribute="bottom" constant="8" id="AOz-Ec-Mi3"/>
+                                                <constraint firstItem="e9R-Fo-1Xu" firstAttribute="bottom" secondItem="IiC-3Q-PYq" secondAttribute="bottom" constant="8" id="FvR-tp-caW"/>
                                                 <constraint firstItem="e9R-Fo-1Xu" firstAttribute="top" secondItem="ijA-rC-kXL" secondAttribute="top" constant="4" id="M9G-Qe-eWT"/>
                                                 <constraint firstItem="Db2-Va-g7K" firstAttribute="trailing" secondItem="e9R-Fo-1Xu" secondAttribute="trailing" id="O75-Uy-o8a"/>
                                                 <constraint firstAttribute="trailing" secondItem="e9R-Fo-1Xu" secondAttribute="trailing" constant="16" id="ONb-0Q-Fpm"/>
                                                 <constraint firstItem="Db2-Va-g7K" firstAttribute="top" secondItem="e9R-Fo-1Xu" secondAttribute="top" id="P3D-ro-yag"/>
-                                                <constraint firstItem="IiC-3Q-PYq" firstAttribute="leading" secondItem="e9R-Fo-1Xu" secondAttribute="leading" constant="8" id="d0Q-hh-Llg"/>
-                                                <constraint firstItem="e9R-Fo-1Xu" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="IiC-3Q-PYq" secondAttribute="trailing" constant="8" id="kHs-qg-OMX"/>
+                                                <constraint firstItem="IiC-3Q-PYq" firstAttribute="leading" secondItem="e9R-Fo-1Xu" secondAttribute="leading" constant="8" id="aqk-MK-8Ev"/>
                                                 <constraint firstItem="e9R-Fo-1Xu" firstAttribute="leading" secondItem="ijA-rC-kXL" secondAttribute="leading" constant="16" id="lIe-Ei-4ny"/>
+                                                <constraint firstItem="e9R-Fo-1Xu" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="IiC-3Q-PYq" secondAttribute="trailing" constant="8" id="neV-yr-Wz0"/>
                                                 <constraint firstAttribute="bottom" secondItem="e9R-Fo-1Xu" secondAttribute="bottom" constant="4" id="unz-SI-z4q"/>
                                             </constraints>
                                         </tableViewCellContentView>
