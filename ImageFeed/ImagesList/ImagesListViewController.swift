@@ -3,6 +3,7 @@ import UIKit
 class ImagesListViewController: UIViewController {
 
     @IBOutlet private var tableView: UITableView!
+    //@IBOutlet var gradientView: UIView!
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -12,6 +13,11 @@ class ImagesListViewController: UIViewController {
     }()
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.addGradientBackground()
     }
 
     override func viewDidLoad() {
@@ -71,3 +77,25 @@ extension ImagesListViewController: UITableViewDelegate {
         return cellHeight
     }
 }
+
+
+
+extension UITableViewCell {
+    func addGradientBackground() {
+        clipsToBounds = true
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [UIColor.black.withAlphaComponent(0).cgColor, UIColor.black.withAlphaComponent(0.2).cgColor]
+
+
+        gradientLayer.frame = self.bounds
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        gradientLayer.locations = [0, 1]
+        print(gradientLayer.frame)
+        self.layer.insertSublayer(gradientLayer, at: 0)
+
+        CAGradientLayer().cornerRadius = 16
+        CAGradientLayer().maskedCorners = CACornerMask([.layerMinXMaxYCorner, .layerMaxXMaxYCorner])
+    }
+}
+
