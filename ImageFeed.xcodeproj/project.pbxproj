@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9411E76229C891A8002B63AF /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9411E76129C891A8002B63AF /* ImagesListViewController.swift */; };
 		9411E76429CB0ADF002B63AF /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9411E76329CB0ADF002B63AF /* ImagesListCell.swift */; };
+		94133A5029DEF66700F77564 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94133A4F29DEF66700F77564 /* ProfileViewController.swift */; };
 		94A54CC429C6E1E80019F0DC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A54CC329C6E1E80019F0DC /* AppDelegate.swift */; };
 		94A54CC629C6E1E80019F0DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */; };
 		94A54CCB29C6E1E80019F0DC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94A54CC929C6E1E80019F0DC /* Main.storyboard */; };
@@ -19,6 +20,7 @@
 /* Begin PBXFileReference section */
 		9411E76129C891A8002B63AF /* ImagesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListViewController.swift; sourceTree = "<group>"; };
 		9411E76329CB0ADF002B63AF /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
+		94133A4F29DEF66700F77564 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		94A54CC029C6E1E80019F0DC /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		94A54CC329C6E1E80019F0DC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 				94A54CC329C6E1E80019F0DC /* AppDelegate.swift */,
 				94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */,
 				94A54CC929C6E1E80019F0DC /* Main.storyboard */,
+				94133A4F29DEF66700F77564 /* ProfileViewController.swift */,
 				9411E76629CB0B6A002B63AF /* ImagesList */,
 				9411E76829CB0BE8002B63AF /* Resources */,
 			);
@@ -159,6 +162,7 @@
 			files = (
 				94A54CC429C6E1E80019F0DC /* AppDelegate.swift in Sources */,
 				9411E76429CB0ADF002B63AF /* ImagesListCell.swift in Sources */,
+				94133A5029DEF66700F77564 /* ProfileViewController.swift in Sources */,
 				9411E76229C891A8002B63AF /* ImagesListViewController.swift in Sources */,
 				94A54CC629C6E1E80019F0DC /* SceneDelegate.swift in Sources */,
 			);
