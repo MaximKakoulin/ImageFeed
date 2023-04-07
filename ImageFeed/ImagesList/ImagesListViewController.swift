@@ -1,8 +1,9 @@
 import UIKit
 
-class ImagesListViewController: UIViewController {
+final class ImagesListViewController: UIViewController {
 
     @IBOutlet private var tableView: UITableView!
+    private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -17,6 +18,17 @@ class ImagesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == showSingleImageSegueIdentifier {
+            let viewController = segue.destination as! SingleImageViewController
+            let indexPath = sender as! IndexPath
+            let image = UIImage(named: photosName[indexPath.row])
+            viewController.image = image
+        } else {
+            super.prepare(for: segue, sender: sender)
+        }
     }
 }
 
@@ -55,6 +67,7 @@ extension ImagesListViewController {
 
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
@@ -75,22 +88,22 @@ extension ImagesListViewController: UITableViewDelegate {
 
 
 /*extension UITableViewCell {
-    func addGradientBackground() {
-        clipsToBounds = true
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.colors = [UIColor.black.withAlphaComponent(0).cgColor, UIColor.black.withAlphaComponent(0.2).cgColor]
+ func addGradientBackground() {
+ clipsToBounds = true
+ let gradientLayer = CAGradientLayer()
+ gradientLayer.colors = [UIColor.black.withAlphaComponent(0).cgColor, UIColor.black.withAlphaComponent(0.2).cgColor]
 
 
-        gradientLayer.frame = self.bounds
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
-        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
-        gradientLayer.locations = [0, 1]
-        print(gradientLayer.frame)
-        self.layer.insertSublayer(gradientLayer, at: 0)
+ gradientLayer.frame = self.bounds
+ gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+ gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+ gradientLayer.locations = [0, 1]
+ print(gradientLayer.frame)
+ self.layer.insertSublayer(gradientLayer, at: 0)
 
-        CAGradientLayer().cornerRadius = 16
-        CAGradientLayer().maskedCorners = CACornerMask([.layerMinXMaxYCorner, .layerMaxXMaxYCorner])
-    }
-}
+ CAGradientLayer().cornerRadius = 16
+ CAGradientLayer().maskedCorners = CACornerMask([.layerMinXMaxYCorner, .layerMaxXMaxYCorner])
+ }
+ }
  Доделать градиент  */
 
