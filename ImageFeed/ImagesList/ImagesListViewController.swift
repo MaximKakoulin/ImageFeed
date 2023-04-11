@@ -105,5 +105,7 @@ extension ImagesListViewController: UITableViewDelegate {
  CAGradientLayer().maskedCorners = CACornerMask([.layerMinXMaxYCorner, .layerMaxXMaxYCorner])
  }
  }
+
+
  Доделать градиент  */
 

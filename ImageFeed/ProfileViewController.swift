@@ -32,7 +32,7 @@ final class ProfileViewController: UIViewController {
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(nameLabel)
         nameLabel.textColor = .white
-        nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .semibold)
+        nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
 
         NSLayoutConstraint.activate([
         nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
