@@ -12,21 +12,16 @@ import UIKit
 
 final class SplashViewController: UIViewController {
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
-
-    private let oauth2Service = OAuth2Service()
     private let tokenStorage = OAuth2TokenStorage()
+    private let oauth2Service = OAuth2Service()
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-
-
-        if let token = tokenStorage.token {
-            let imagesListViewController = ImagesListViewController()
-            self.present(imagesListViewController, animated: true, completion: nil)
+        if let token = tokenStorage.token { // Если токен сохранен, значит пользователь уже авторизован.                                      // Можно перенаправить на экран галереи-таблицы
+            switchToTabBarController()
         } else {
-            let authViewController = AuthViewController()
-            self.present(authViewController, animated: true, completion: nil)
+            // Если токена нет, то перенаправляем на экран авторизации
             performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
         }
     }
@@ -55,8 +50,7 @@ extension SplashViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Проверим, что переходим на авторизацию
         if segue.identifier == showAuthenticationScreenSegueIdentifier {
-
-            // Доберёмся до первого контроллера в навигации. Мы помним, что в программировании отсчёт начинается с 0?
+            // Доберёмся до первого контроллера в навигации. В программировании отсчёт начинается с 0
             guard
                 let navigationController = segue.destination as? UINavigationController,
                 let viewController = navigationController.viewControllers[0] as? AuthViewController
@@ -74,19 +68,19 @@ extension SplashViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
         dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
-            self.fetchOAuthToken()
+            self.fetchOAuthToken(code)
         }
     }
 
-    func fetchOAuthToken() {
-        let code = "code"
-        oauth2Service.fetchAuthToken(code: code) { (result: Result<String,Error>) in
+    private func fetchOAuthToken(_ code: String) {
+        oauth2Service.fetchOAuthToken(code) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success:
                 self.switchToTabBarController()
-            case .failure(let error):
-                // Handle error
-                print("Error retrieving authorization token: \(error.localizedDescription)")
+            case .failure:
+                print("Error")
+                break
             }
         }
     }

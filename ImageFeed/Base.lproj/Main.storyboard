@@ -342,7 +342,7 @@
             </objects>
             <point key="canvasLocation" x="775" y="1281"/>
         </scene>
-        <!--Unsplash-->
+        <!--Splash View Controller-->
         <scene sceneID="rkU-zC-0jY">
             <objects>
                 <viewController id="tG6-Eh-40o" customClass="SplashViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
@@ -361,9 +361,8 @@
                             <constraint firstItem="1Ka-F7-XxF" firstAttribute="centerX" secondItem="h7z-lZ-HsH" secondAttribute="centerX" id="t0z-PS-Z3g"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Unsplash" id="9Wu-zi-qLv"/>
                     <connections>
-                        <segue destination="wIG-d5-VcD" kind="presentation" identifier="showAuthenticationScreen" modalPresentationStyle="fullScreen" id="vgl-uX-OMx"/>
+                        <segue destination="wIG-d5-VcD" kind="presentation" identifier="ShowAuthenticationScreen" modalPresentationStyle="fullScreen" id="vgl-uX-OMx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="B2C-9N-Ze7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
