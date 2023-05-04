@@ -19,7 +19,7 @@ protocol WebViewViewControllerDelegate: AnyObject {
 
 final class WebViewViewController: UIViewController {
 
-    @IBOutlet private var progressView: UIProgressView!
+    @IBOutlet private weak var progressView: UIProgressView!
     @IBOutlet private var webView: WKWebView!
     @IBAction private func didTapBackButton(_ sender: Any) {
         delegate?.webViewViewControllerDidCancel(self)

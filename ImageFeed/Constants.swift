@@ -7,9 +7,6 @@
 
 import UIKit
 
-
-
-
 let accessKey = "38hgALz1ns91MqL-WOeT8P2mtfcP0N2vr0DnLKPVZPI"
 let secretKey = "UOEX3BxjL2ut-miJSTNWKb6xJ_GhyO3qrMcaOfhLFHE"
 let redirectURI = "urn:ietf:wg:oauth:2.0:oob"

@@ -15,9 +15,9 @@ import UIKit
 
 class OAuth2Service {
     static let shared = OAuth2Service() // объявляем экземпляра класса OAuth2Service в виде Singleton - означает, что                                 // в приложение будет только экземпляр этого класса
-
+    
     private let urlSession = URLSession.shared // Создание экземпляра класса URLSession для выполнения HTTP-запросов.                                       //Этот экземпляр создается один раз при создании объекта OAuth2Services.
-
+    
     private (set) var authToken: String? {     // Свойство для сохранение токена аутентификации
         get {
             return OAuth2TokenStorage().token
@@ -26,7 +26,7 @@ class OAuth2Service {
             OAuth2TokenStorage().token = newValue
         }
     }
-
+    
     // Сейчас мы объявляем метод fetchOAuthToken для выполнения запроса на получение токена аутентификации
     func fetchOAuthToken(_ code: String, completion: @escaping(Result<String, Error>) -> Void ) {
         let request = authTokenRequest(code: code)
@@ -53,7 +53,7 @@ extension OAuth2Service {
     private func object(
         for request: URLRequest,
         completion: @escaping (Result<OAuthTokenResponseBody, Error>) -> Void) -> URLSessionTask {
-
+            
             let decoder = JSONDecoder()
             return urlSession.data(for: request) { (result: Result<Data, Error>) in
                 //Определяем константу response, используя flatMap для извлечения данных из результата выполнения запроса.
@@ -64,7 +64,7 @@ extension OAuth2Service {
                 completion(response)
             }
         }
-
+    
     // Объявляем ф-ю authTokenRequest, которая возвращает URLRequest и вызываем метод makeHTTPRequest на классе URLRequest, передавая значения пути, метода, и базового URL, а также другие параметры, которые требуются для запроса токена аутентификации.
     private func authTokenRequest(code: String) -> URLRequest {
         URLRequest.makeHTTPRequest(
@@ -78,13 +78,13 @@ extension OAuth2Service {
             baseURL: URL(string: "https://unsplash.com")!
         )
     }
-
+    
     private struct OAuthTokenResponseBody: Decodable { // Структура, которая используется для декодирования ответа                                                   // сервера
         let accessToken: String
         let tokenType: String
         let scope: String
         let createdAt: Int
-
+        
         enum CodingKeys: String, CodingKey { // Свойство структуры, которые соответствуют полям ответа сервера.
             case accessToken = "access_token"
             case tokenType = "token_type"
@@ -107,9 +107,9 @@ extension URLRequest {
 // MARK: - Network Connection
 
 enum NetworkError: Error {
-case httpStatusCode(Int)
-case urlRequestError(Error)
-case urlSessionError
+    case httpStatusCode(Int)
+    case urlRequestError(Error)
+    case urlSessionError
 }
 
 extension URLSession {
@@ -120,15 +120,15 @@ extension URLSession {
                 completion(result)
             }
         }
-
+        
         //Здесь определяется задача task с использованием метода dataTask(with:completionHandler:). При завершении запроса вызывается замыкание completionHandler, которое принимает параметры data, response и error.
-
+        
         //Если data, response и statusCode определены и код состояния находится в диапазоне 200-299, то вызывается замыкание fulfillCompletion с результатом в виде .success(data).
         let task = dataTask(with: request, completionHandler: { data, response, error in
             if let data = data,
                let response = response,
                let statusCode = (response as? HTTPURLResponse)?.statusCode {
-
+                
                 if 200 ..< 300 ~= statusCode {
                     fulfillCompletion(.success(data))
                 } else {

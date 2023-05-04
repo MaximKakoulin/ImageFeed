@@ -85,27 +85,3 @@ extension ImagesListViewController: UITableViewDelegate {
     }
 }
 
-
-
-/*extension UITableViewCell {
- func addGradientBackground() {
- clipsToBounds = true
- let gradientLayer = CAGradientLayer()
- gradientLayer.colors = [UIColor.black.withAlphaComponent(0).cgColor, UIColor.black.withAlphaComponent(0.2).cgColor]
-
-
- gradientLayer.frame = self.bounds
- gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
- gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
- gradientLayer.locations = [0, 1]
- print(gradientLayer.frame)
- self.layer.insertSublayer(gradientLayer, at: 0)
-
- CAGradientLayer().cornerRadius = 16
- CAGradientLayer().maskedCorners = CACornerMask([.layerMinXMaxYCorner, .layerMaxXMaxYCorner])
- }
- }
-
-
- Доделать градиент  */
-
