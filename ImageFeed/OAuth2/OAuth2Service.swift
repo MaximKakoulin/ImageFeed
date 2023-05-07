@@ -9,11 +9,9 @@ import UIKit
 
 
 
-
-
-
-
-class OAuth2Service {
+final class OAuth2Service {
+    private var task: URLSessionTask?
+    private var lastCode: String?
     static let shared = OAuth2Service() // объявляем экземпляра класса OAuth2Service в виде Singleton - означает, что                                 // в приложение будет только экземпляр этого класса
     
     private let urlSession = URLSession.shared // Создание экземпляра класса URLSession для выполнения HTTP-запросов.                                       //Этот экземпляр создается один раз при создании объекта OAuth2Services.
@@ -28,19 +26,42 @@ class OAuth2Service {
     }
     
     // Сейчас мы объявляем метод fetchOAuthToken для выполнения запроса на получение токена аутентификации
-    func fetchOAuthToken(_ code: String, completion: @escaping(Result<String, Error>) -> Void ) {
-        let request = authTokenRequest(code: code)
-        let task = object(for: request) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let body):
-                let authToken = body.accessToken
-                self.authToken = authToken
-                completion(.success(authToken))
-            case .failure(let error):
-                completion(.failure(error))
-            } }
-        task.resume()
+    func fetchOAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        if lastCode == code { return }
+        task?.cancel()
+        lastCode = code
+        let request = makeRequest(code: code)
+        var task: URLSessionTask?
+        task = urlSession.dataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    completion(.failure(error))
+                } else if let data = data {
+                    do {
+                        let response = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
+                        let authToken = response.accessToken
+                        self.authToken = authToken
+                        completion(.success(authToken))
+                        self.task = nil
+                    } catch {
+                        completion(.failure(error))
+                    }
+                } else {
+                    completion(.failure(error!))
+                }
+
+            }
+            self.task = task
+            task?.resume()
+        }
+    }
+
+    private func makeRequest(code: String) -> URLRequest {
+        guard let url = URL(string: "defaultBaseURL\(code)") else { fatalError("Failed to create URL") }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        return request
     }
 }
 
@@ -53,7 +74,7 @@ extension OAuth2Service {
     private func object(
         for request: URLRequest,
         completion: @escaping (Result<OAuthTokenResponseBody, Error>) -> Void) -> URLSessionTask {
-            
+
             let decoder = JSONDecoder()
             return urlSession.data(for: request) { (result: Result<Data, Error>) in
                 //Определяем константу response, используя flatMap для извлечения данных из результата выполнения запроса.
@@ -64,7 +85,7 @@ extension OAuth2Service {
                 completion(response)
             }
         }
-    
+
     // Объявляем ф-ю authTokenRequest, которая возвращает URLRequest и вызываем метод makeHTTPRequest на классе URLRequest, передавая значения пути, метода, и базового URL, а также другие параметры, которые требуются для запроса токена аутентификации.
     private func authTokenRequest(code: String) -> URLRequest {
         URLRequest.makeHTTPRequest(
@@ -78,13 +99,13 @@ extension OAuth2Service {
             baseURL: URL(string: "https://unsplash.com")!
         )
     }
-    
+
     private struct OAuthTokenResponseBody: Decodable { // Структура, которая используется для декодирования ответа                                                   // сервера
         let accessToken: String
         let tokenType: String
         let scope: String
         let createdAt: Int
-        
+
         enum CodingKeys: String, CodingKey { // Свойство структуры, которые соответствуют полям ответа сервера.
             case accessToken = "access_token"
             case tokenType = "token_type"
@@ -120,15 +141,15 @@ extension URLSession {
                 completion(result)
             }
         }
-        
+
         //Здесь определяется задача task с использованием метода dataTask(with:completionHandler:). При завершении запроса вызывается замыкание completionHandler, которое принимает параметры data, response и error.
-        
+
         //Если data, response и statusCode определены и код состояния находится в диапазоне 200-299, то вызывается замыкание fulfillCompletion с результатом в виде .success(data).
         let task = dataTask(with: request, completionHandler: { data, response, error in
             if let data = data,
                let response = response,
                let statusCode = (response as? HTTPURLResponse)?.statusCode {
-                
+
                 if 200 ..< 300 ~= statusCode {
                     fulfillCompletion(.success(data))
                 } else {
