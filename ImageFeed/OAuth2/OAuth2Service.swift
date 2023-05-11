@@ -12,7 +12,7 @@ import UIKit
 final class OAuth2Service {
     private var task: URLSessionTask?
     private var lastCode: String?
-    static let shared = OAuth2Service() // объявляем экземпляра класса OAuth2Service в виде Singleton - означает, что                                 // в приложение будет только экземпляр этого класса
+    static let shared = OAuth2Service() // объявляем экземпляра класса OAuth2Service в виде Singleton - означает, что                              // в приложение будет только экземпляр этого класса
     
     private let urlSession = URLSession.shared // Создание экземпляра класса URLSession для выполнения HTTP-запросов.                                       //Этот экземпляр создается один раз при создании объекта OAuth2Services.
     
@@ -26,35 +26,30 @@ final class OAuth2Service {
     }
     
     // Сейчас мы объявляем метод fetchOAuthToken для выполнения запроса на получение токена аутентификации
-    func fetchOAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
+    func fetchOAuthToken(_ code: String, completion: @escaping(Result<String, Error>) -> Void ) {
+        ///проверка что метод вызывается из главного потока
         assert(Thread.isMainThread)
-        if lastCode == code { return }
+        if lastCode == code {return}
         task?.cancel()
         lastCode = code
-        let request = makeRequest(code: code)
-        var task: URLSessionTask?
-        task = urlSession.dataTask(with: request) { data, response, error in
+        let request = authTokenRequest(code: code)
+        let task = object(for: request) { [weak self] result in
             DispatchQueue.main.async {
-                if let error = error {
+                guard let self = self else {return}
+                switch result {
+                case .success(let body):
+                    let authToken = body.accessToken
+                    self.authToken = authToken
+                    completion(.success(authToken))//в случае успеха, токен аутентификации извлекается из ответа на запрос и сохраняется в OAuth2TokenStorage и в свойстве authToken
+                    self.task = nil
+                case .failure(let error):
                     completion(.failure(error))
-                } else if let data = data {
-                    do {
-                        let response = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                        let authToken = response.accessToken
-                        self.authToken = authToken
-                        completion(.success(authToken))
-                        self.task = nil
-                    } catch {
-                        completion(.failure(error))
-                    }
-                } else {
-                    completion(.failure(error!))
+                    self.lastCode = nil
                 }
-
             }
-            self.task = task
-            task?.resume()
         }
+        self.task = task
+        task.resume()
     }
 
     private func makeRequest(code: String) -> URLRequest {
