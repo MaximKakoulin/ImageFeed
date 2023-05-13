@@ -4,9 +4,12 @@ import UIKit
 
 final class ProfileViewController: UIViewController {
 
-    private var nameLabel: UILabel?
-    private var loginNameLabel: UILabel?
-    private var descriptionLabel: UILabel?
+    private var nameLabel: UILabel!
+    private var loginNameLabel: UILabel!
+    private var descriptionLabel: UILabel!
+
+    let profileService = ProfileService()
+    let tokenStorage = OAuth2TokenStorage()
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -14,6 +17,21 @@ final class ProfileViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        guard let token = tokenStorage.token else { return }
+
+        profileService.fetchProfile(token) { [weak self] result in
+            switch result {
+            case .success(let profile):
+                DispatchQueue.main.async {
+                    self?.nameLabel.text = profile.name
+                    self?.loginNameLabel.text = profile.loginName
+                    self?.descriptionLabel.text = profile.bio
+                }
+            case .failure(let error):
+                print("Error fetching profile: \(error.localizedDescription)")
+            }
+        }
 
         let profileImage = UIImage(named: "MockPhoto")
         let imageView = UIImageView(image: profileImage)
@@ -35,8 +53,8 @@ final class ProfileViewController: UIViewController {
         nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
 
         NSLayoutConstraint.activate([
-        nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
-        nameLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor)
+            nameLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
+            nameLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor)
         ])
         self.nameLabel = nameLabel
 
