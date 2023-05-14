@@ -8,28 +8,28 @@ final class ProfileViewController: UIViewController {
     private var loginNameLabel: UILabel!
     private var descriptionLabel: UILabel!
 
-    let profileService = ProfileService()
+    private let profileService = ProfileService.shared
     let tokenStorage = OAuth2TokenStorage()
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
 
+    func updateProfileDetails(profile: Profile) {
+       nameLabel.text = profile.name
+       loginNameLabel.text = profile.loginName
+       descriptionLabel.text = profile.bio
+   }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        guard let token = tokenStorage.token else { return }
-
-        profileService.fetchProfile(token) { [weak self] result in
+        profileService.fetchProfile(tokenStorage.token!) { result in
             switch result {
             case .success(let profile):
-                DispatchQueue.main.async {
-                    self?.nameLabel.text = profile.name
-                    self?.loginNameLabel.text = profile.loginName
-                    self?.descriptionLabel.text = profile.bio
-                }
+                self.updateProfileDetails(profile: profile)
             case .failure(let error):
-                print("Error fetching profile: \(error.localizedDescription)")
+                print(error)
             }
         }
 

@@ -10,6 +10,8 @@ import Foundation
 
 
 final class ProfileService {
+    static let shared = ProfileService()
+    private(set) var profile: Profile?
     private let semaphore = DispatchSemaphore(value: 1)
 
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
@@ -24,6 +26,8 @@ final class ProfileService {
         request.setValue("Bearer \(OAuth2TokenStorage())", forHTTPHeaderField: "Authorization")
 
         URLSession.shared.dataTask(with: request) { (data, response, error) in
+            defer { self.semaphore.signal() }
+
             if let error = error {
                 completion(.failure(error))
                 return
