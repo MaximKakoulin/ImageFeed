@@ -71,22 +71,6 @@ struct ProfileResult: Codable {
     let totalLikel: Int
     let totalPhotos: Int
     let totalCollections: Int
-    let profileImage: ProfileImage
-    let links: Links
-}
-
-struct ProfileImage: Codable {
-    let small: String
-    let medium: String
-    let large: String
-}
-
-struct Links: Codable {
-    let selfLink: String
-    let html: String
-    let photos: String
-    let likes: String
-    let portfolio: String
 }
 
 struct Profile {

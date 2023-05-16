@@ -25,6 +25,7 @@
 		94A54CD029C6E1E90019F0DC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94A54CCE29C6E1E90019F0DC /* LaunchScreen.storyboard */; };
 		94C1F96E2A06AF2F0031F7A6 /* UIBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C1F96D2A06AF2F0031F7A6 /* UIBlockingProgressHUD.swift */; };
 		94C1F9702A0F9EC40031F7A6 /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C1F96F2A0F9EC40031F7A6 /* ProfileService.swift */; };
+		94C1F9722A1130760031F7A6 /* ProfileImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94C1F9712A1130760031F7A6 /* ProfileImageService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		94A54CD129C6E1E90019F0DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		94C1F96D2A06AF2F0031F7A6 /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
 		94C1F96F2A0F9EC40031F7A6 /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
+		94C1F9712A1130760031F7A6 /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +147,7 @@
 				94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */,
 				94A54CC929C6E1E80019F0DC /* Main.storyboard */,
 				9439950629EAEC60005C7779 /* Constants.swift */,
+				94C1F9712A1130760031F7A6 /* ProfileImageService.swift */,
 				94C1F96F2A0F9EC40031F7A6 /* ProfileService.swift */,
 				94C1F96D2A06AF2F0031F7A6 /* UIBlockingProgressHUD.swift */,
 				9439951629FFFA9D005C7779 /* SplashViewController */,
@@ -247,6 +250,7 @@
 				94133A5429DF265700F77564 /* SingleImageViewController.swift in Sources */,
 				9439950E29EC00AE005C7779 /* WebViewViewController.swift in Sources */,
 				9439951029FACBFD005C7779 /* OAuth2Service.swift in Sources */,
+				94C1F9722A1130760031F7A6 /* ProfileImageService.swift in Sources */,
 				94A54CC629C6E1E80019F0DC /* SceneDelegate.swift in Sources */,
 				94C1F9702A0F9EC40031F7A6 /* ProfileService.swift in Sources */,
 			);
