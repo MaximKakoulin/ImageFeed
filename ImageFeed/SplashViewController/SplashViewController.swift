@@ -100,7 +100,7 @@ extension SplashViewController: AuthViewControllerDelegate {
             guard let self = self else { return }
             switch result {
             case .success(let result):
-                self.profileImageService.fetchProfileImageURL(userName: result.userName) { _ in }
+                self.profileImageService.fetchProfileImageURL(username: result.userName) { _ in }
                 self.switchToTabBarController()
             case .failure(let error):
                 UIBlockingProgressHUD.dismiss()
@@ -108,6 +108,16 @@ extension SplashViewController: AuthViewControllerDelegate {
                 break
             }
         }
+    }
+
+    private func showAlertViewController() {
+        let alertVC = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert
+            )
+        let action = UIAlertAction(title: "OK", style: .default)
+        alertVC.addAction(action)
     }
 }
 
