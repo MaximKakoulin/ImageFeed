@@ -18,6 +18,7 @@
 		9439951229FAFA66005C7779 /* OAuth2TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9439951129FAFA66005C7779 /* OAuth2TokenStorage.swift */; };
 		9439951529FF9D46005C7779 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9439951429FF9D46005C7779 /* SplashViewController.swift */; };
 		943995192A03FCD4005C7779 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 943995182A03FCD4005C7779 /* ProgressHUD */; };
+		948CBC432A1A1D0900437FEE /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CBC422A1A1D0900437FEE /* NetworkClient.swift */; };
 		94A54CC429C6E1E80019F0DC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A54CC329C6E1E80019F0DC /* AppDelegate.swift */; };
 		94A54CC629C6E1E80019F0DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */; };
 		94A54CCB29C6E1E80019F0DC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94A54CC929C6E1E80019F0DC /* Main.storyboard */; };
@@ -39,6 +40,7 @@
 		9439950F29FACBFD005C7779 /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
 		9439951129FAFA66005C7779 /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
 		9439951429FF9D46005C7779 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
+		948CBC422A1A1D0900437FEE /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		94A54CC029C6E1E80019F0DC /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		94A54CC329C6E1E80019F0DC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -93,6 +95,8 @@
 		9439950B29EBFE82005C7779 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				94C1F9712A1130760031F7A6 /* ProfileImageService.swift */,
+				94C1F96F2A0F9EC40031F7A6 /* ProfileService.swift */,
 				94133A4F29DEF66700F77564 /* ProfileViewController.swift */,
 			);
 			path = Profile;
@@ -118,6 +122,7 @@
 		9439951629FFFA9D005C7779 /* SplashViewController */ = {
 			isa = PBXGroup;
 			children = (
+				94C1F96D2A06AF2F0031F7A6 /* UIBlockingProgressHUD.swift */,
 				9439951429FF9D46005C7779 /* SplashViewController.swift */,
 			);
 			path = SplashViewController;
@@ -147,9 +152,7 @@
 				94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */,
 				94A54CC929C6E1E80019F0DC /* Main.storyboard */,
 				9439950629EAEC60005C7779 /* Constants.swift */,
-				94C1F9712A1130760031F7A6 /* ProfileImageService.swift */,
-				94C1F96F2A0F9EC40031F7A6 /* ProfileService.swift */,
-				94C1F96D2A06AF2F0031F7A6 /* UIBlockingProgressHUD.swift */,
+				948CBC422A1A1D0900437FEE /* NetworkClient.swift */,
 				9439951629FFFA9D005C7779 /* SplashViewController */,
 				9439951329FAFECB005C7779 /* OAuth2 */,
 				9439950B29EBFE82005C7779 /* Profile */,
@@ -245,6 +248,7 @@
 				9411E76229C891A8002B63AF /* ImagesListViewController.swift in Sources */,
 				9439951229FAFA66005C7779 /* OAuth2TokenStorage.swift in Sources */,
 				94C1F96E2A06AF2F0031F7A6 /* UIBlockingProgressHUD.swift in Sources */,
+				948CBC432A1A1D0900437FEE /* NetworkClient.swift in Sources */,
 				9439950929EBFE18005C7779 /* AuthViewController.swift in Sources */,
 				9439950729EAEC60005C7779 /* Constants.swift in Sources */,
 				94133A5429DF265700F77564 /* SingleImageViewController.swift in Sources */,

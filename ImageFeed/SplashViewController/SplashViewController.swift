@@ -16,13 +16,10 @@ final class SplashViewController: UIViewController {
     private let tokenStorage = OAuth2TokenStorage()
     private let oauth2Service = OAuth2Service()
     private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
-        func fetchProfile(token: String) {
-
-        }
 
         if let token = tokenStorage.token { // Если токен сохранен, значит пользователь уже авторизован. Можно перенаправить на экран страницы                                      галереи-таблицы
             switchToTabBarController()
@@ -102,8 +99,8 @@ extension SplashViewController: AuthViewControllerDelegate {
         profileService.fetchProfile(token) { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case .success:
-                UIBlockingProgressHUD.dismiss()
+            case .success(let result):
+                self.profileImageService.fetchProfileImageURL(userName: result.userName) { _ in }
                 self.switchToTabBarController()
             case .failure(let error):
                 UIBlockingProgressHUD.dismiss()
