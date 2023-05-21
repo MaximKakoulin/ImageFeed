@@ -12,40 +12,35 @@ import Foundation
 final class ProfileService {
     static let shared = ProfileService()
     private(set) var profile: Profile?
+    private var fetchProfileTask: URLSessionTask?
+    private let urlSession = URLSession.shared
+
     private let semaphore = DispatchSemaphore(value: 1)
 
+    //MARK: - Metoths
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
-        guard let url = URL(string: "https://api.unsplash.com/me") else {
-            completion(.failure(ProfileServiceError.invalidURL))
-            return
-        }
+        fetchProfileTask?.cancel()
 
-        semaphore.wait()
-
+        let url = URL(string: "https://api.unsplash.com/me")!
         var request = URLRequest(url: url)
-        request.setValue("Bearer \(OAuth2TokenStorage())", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
-            defer { self.semaphore.signal() }
-
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-
-            guard let data = data else {
-                completion(.failure(ProfileServiceError.invalidData))
-                return
-            }
-
-            do {
-                let userProfile = try JSONDecoder().decode(ProfileResult.self, from: data)
-                let profile = self.createProfile(from: userProfile)
+        fetchProfileTask = urlSession.objectTask(for: request) {[weak self] (result: Result<ProfileResult, Error>) in
+            switch result {
+            case .success(let profileResult):
+                let profile = Profile(
+                    userName: profileResult.userName,
+                    name: "\(profileResult.firstName) \(profileResult.lastName)",
+                    loginName: "@\(profileResult.userName)",
+                    bio: profileResult.bio
+                )
+                self?.profile = profile
                 completion(.success(profile))
-            } catch {
-                completion(.failure(error))
+            case .failure(_):
+                completion(.failure(ProfileServiceError.decodingFailed))
             }
-        }.resume()
+        }
+        fetchProfileTask?.resume()
     }
 
     private func createProfile(from userProfile: ProfileResult) -> Profile {
@@ -59,6 +54,7 @@ final class ProfileService {
 enum ProfileServiceError: Error {
     case invalidURL
     case invalidData
+    case decodingFailed
 }
 
 struct ProfileResult: Codable {

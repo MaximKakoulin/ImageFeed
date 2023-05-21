@@ -13,49 +13,50 @@ import UIKit
 
 final class ProfileImageService {
     static let shared = ProfileImageService()
-    private let networkClient = NetworkClient.shared
+    private let tokenStorage = OAuth2TokenStorage()
 
-    private (set) var avatarUrl: String?
-    private var currentTask: URLSessionTask?
+
+    private (set) var avatarURL: String?
+    private let urlSession = URLSession.shared
+    private var task: URLSessionTask?
     static let didChangeNotification = Notification.Name("ProfileImageProviderDidChange")
 
-    func fetchProfileImageURL(userName: String, completion: @escaping (Result<String, Error>) -> Void) {
-        assert(Thread.isMainThread)
-        if currentTask != nil {
-            currentTask?.cancel()
-        } else {
-            guard let urlRequestProfileData = makeUserPhotoProfileRequest(userName: userName)
-            else { return }
-            let task = networkClient.getObject(dataType: UserResult.self, for: urlRequestProfileData) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let profilePhoto):
-                    guard let mediumPhoto = profilePhoto.profileImage.medium else { return }
-                    self.avatarUrl = mediumPhoto
-                    NotificationCenter.default.post(
-                        name: ProfileImageService.didChangeNotification,
-                        object: self,
-                        userInfo: ["URL": mediumPhoto]
-                    )
-                    completion(.success(mediumPhoto))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-                self.currentTask = nil
-            }
-            self.currentTask = task
-            task.resume()
-        }
-    }
+// MARK: - Methods
+    func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
+        guard let token = tokenStorage.token else {return}
 
-    private func makeUserPhotoProfileRequest (userName: String) -> URLRequest? {
-        URLRequest.makeHTTPRequest (path: "/users/\(userName)", httpMethod: "GET", baseURL: defaultBaseURL)
+        let urlString = "https://api.unsplash.com/users/\(username)"
+        guard let url = URL(string: urlString) else { return}
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        let dataTask = urlSession.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
+            switch result {
+            case .success(let userResult):
+                self?.avatarURL = userResult.profileImage.small
+                if let avatarURL = self?.avatarURL {
+                    completion(.success(userResult.profileImage.small))
+                    NotificationCenter.default.post(name: ProfileImageService.didChangeNotification,
+                                                      object: self,
+                                                      userInfo:  ["URL": userResult.profileImage.small])
+                } else {
+                    completion(.failure(ProfileServiceError.invalidData))
+                }
+                self?.task = nil
+            case .failure(_):
+                completion(.failure(ProfileServiceError.decodingFailed))            }
+        }
+        task = dataTask
+        task?.resume()
     }
 }
 
+// MARK: - Structs
 struct ProfileImage: Codable {
-    let small: String?
-    let medium: String?
+    let small: String
+    let medium: String
 }
 
 struct UserResult: Codable {
@@ -66,50 +67,4 @@ struct UserResult: Codable {
     }
 }
 
-/*
- func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
 
- guard avatarUrl == nil else {
- completion(.success(avatarUrl!))
- return
- }
-
- guard let token = OAuth2TokenStorage().token else {
- completion(.failure(ProfileImageServiceError.unauthorized))
- return
- }
-
- let url = URL(string: "https://api.unsplash.com/users/\(username)")!
- var request = URLRequest(url: url)
- request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-
- task?.cancel()
- task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-
- guard error == nil else {
- completion(.failure(error!))
- return
- }
-
- guard let data = data else {
- completion(.failure(ProfileImageServiceError.noData))
- return
- }
-
- do {
- let userResult = try JSONDecoder().decode(UserResult.self, from: data)
- self.avatarUrl = userResult.profileImage.small
- completion(.success(userResult.profileImage.small))
- } catch {
- completion(.failure(error))
- }
- }
- task?.resume()
- }
-
- enum ProfileImageServiceError: Error {
- case unauthorized
- case noData
- }
- }
- */
