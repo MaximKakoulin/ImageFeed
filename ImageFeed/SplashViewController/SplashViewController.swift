@@ -21,8 +21,7 @@ final class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if let token = tokenStorage.token { // Если токен сохранен, значит пользователь уже авторизован. Можно перенаправить на экран страницы                                      галереи-таблицы
-            switchToTabBarController()
+        if let token = tokenStorage.token {
             fetchProfile(token: token)
         } else {
             // Если токена нет, то перенаправляем на экран авторизации
@@ -41,7 +40,9 @@ final class SplashViewController: UIViewController {
 
     func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
-            fatalError("Invalid Configuration")
+            assertionFailure("Invalid config")
+            showAlertViewController()
+            return
         }
 
         let tabBarController = UIStoryboard(name: "Main", bundle: .main)
