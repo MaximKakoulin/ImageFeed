@@ -5,7 +5,7 @@
 //  Created by Максим on 13.05.2023.
 //
 
-import Foundation
+import UIKit
 
 
 
@@ -14,8 +14,6 @@ final class ProfileService {
     private(set) var profile: Profile?
     private var fetchProfileTask: URLSessionTask?
     private let urlSession = URLSession.shared
-
-    private let semaphore = DispatchSemaphore(value: 1)
 
     //MARK: - Metoths
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
@@ -42,36 +40,32 @@ final class ProfileService {
         }
         fetchProfileTask?.resume()
     }
+}
 
-    private func createProfile(from userProfile: ProfileResult) -> Profile {
-        let name = "\(userProfile.firstName) \(userProfile.lastName)"
-        let loginName = "@\(userProfile.userName)"
-        let profile = Profile(userName: userProfile.userName, name: name, loginName: loginName, bio: userProfile.bio ?? "")
-        return profile
+struct ProfileResult: Codable {
+    let userName: String
+    let firstName: String
+    let lastName: String
+    let bio: String?
+
+    ///Определяем свойства структуры, которые соответствуют полям ответа сервера.
+    enum CodingKeys: String, CodingKey {
+        case userName = "username"
+        case firstName = "first_name"
+        case lastName = "last_name"
+        case bio = "bio"
     }
+}
+
+struct Profile: Codable {
+    var userName: String
+    var name: String
+    var loginName: String
+    var bio: String?
 }
 
 enum ProfileServiceError: Error {
     case invalidURL
     case invalidData
     case decodingFailed
-}
-
-struct ProfileResult: Codable {
-    let id: String
-    let userName: String
-    let name: String
-    let firstName: String
-    let lastName: String
-    let bio: String?
-    let totalLikel: Int
-    let totalPhotos: Int
-    let totalCollections: Int
-}
-
-struct Profile {
-    let userName: String
-    let name: String
-    let loginName: String
-    let bio: String?
 }

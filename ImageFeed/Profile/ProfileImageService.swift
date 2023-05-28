@@ -22,10 +22,10 @@ final class ProfileImageService {
     static let didChangeNotification = Notification.Name("ProfileImageProviderDidChange")
 
 // MARK: - Methods
-    func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
+    func fetchProfileImageURL(userName: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         guard let token = tokenStorage.token else {return}
 
-        let urlString = "https://api.unsplash.com/users/\(username)"
+        let urlString = "https://api.unsplash.com/users/\(userName)"
         guard let url = URL(string: urlString) else { return}
 
         var request = URLRequest(url: url)
@@ -46,7 +46,8 @@ final class ProfileImageService {
                 }
                 self?.task = nil
             case .failure(_):
-                completion(.failure(ProfileServiceError.decodingFailed))            }
+                completion(.failure(ProfileServiceError.decodingFailed))
+            }
         }
         task = dataTask
         task?.resume()
@@ -54,16 +55,15 @@ final class ProfileImageService {
 }
 
 // MARK: - Structs
-struct ProfileImage: Codable {
-    let small: String
-    let medium: String
-}
-
 struct UserResult: Codable {
     let profileImage: ProfileImage
 
     enum CodingKeys: String, CodingKey {
-        case profileImage = "profile_image"
+        case profileImage =  "profile_image"
+    }
+
+    struct ProfileImage: Codable {
+        let small: String
     }
 }
 

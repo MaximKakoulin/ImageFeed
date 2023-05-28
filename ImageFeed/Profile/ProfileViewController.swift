@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 
 
@@ -22,17 +23,13 @@ final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         profileUISetup()
-
-        updateProfileDetails(profile: profileService.profile!)
-        subscribeForAvatarUpdates()
-        updateAvatar()
     }
 
     //MARK: - Methods
-     private func configureConstraints() {
+    private func configureConstraints() {
         NSLayoutConstraint.activate([
-            avatarImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            avatarImage.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            avatarImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
+            avatarImage.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             avatarImage.widthAnchor.constraint(equalToConstant: 70),
             avatarImage.heightAnchor.constraint(equalToConstant: 70),
 
@@ -107,19 +104,29 @@ final class ProfileViewController: UIViewController {
         createLoginNameLabel(safeArea: view.safeAreaLayoutGuide)
         createDescriptionLabel(safeArea: view.safeAreaLayoutGuide)
         createLogoutButton(safeArea: view.safeAreaLayoutGuide)
+        updateProfileDetails(profile: profileService.profile)
+        updateAvatar()
     }
 
-    private func updateProfileDetails(profile: Profile) {
-        nameLabel.text = profile.name
-        loginNameLabel.text = profile.loginName
-        descriptionLabel.text = profile.bio
+    private func updateProfileDetails(profile: Profile?) {
+        if let profile = profile {
+            nameLabel.text = profile.name
+            loginNameLabel.text = profile.loginName
+            descriptionLabel.text = profile.bio
+        } else {
+            nameLabel.text = "Error"
+            loginNameLabel.text = "Error"
+            descriptionLabel.text = "Error"
+        }
     }
+
 
     private func updateAvatar() {
-        guard let profileImageURL = ProfileImageService.shared.avatarURL,
+        guard let profileImageURL = profileImageService.avatarURL,
               let url = URL(string: profileImageURL)
         else { return }
-        // TODO 11 KF
+        let placeholderImage = UIImage(systemName: "MockPhoto")
+        avatarImage.kf.setImage(with: url, placeholder: placeholderImage)
     }
 
     private func subscribeForAvatarUpdates() {

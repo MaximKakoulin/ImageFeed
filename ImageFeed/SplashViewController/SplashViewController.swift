@@ -74,38 +74,38 @@ extension SplashViewController: AuthViewControllerDelegate {
         UIBlockingProgressHUD.show()
         dismiss(animated: true) { [weak self] in
             guard let self = self else { return }
-            UIBlockingProgressHUD.show()
             self.fetchOAuthToken(code)
         }
+        UIBlockingProgressHUD.show()
     }
 
     private func fetchOAuthToken(_ code: String) {
-        OAuth2Service.shared.fetchOAuthToken(code) { [weak self] result in
+        oauth2Service.fetchOAuthToken(code) { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case .success(let token):
+            case .success (let token):
                 self.fetchProfile(token: token)
-                self.switchToTabBarController()
-                UIBlockingProgressHUD.dismiss()
             case .failure:
-                UIBlockingProgressHUD.dismiss()
-                print("Error")
+                showAlertViewController()
                 break
             }
+            UIBlockingProgressHUD.dismiss()
         }
     }
 
-     func fetchProfile(token: String) {
-        profileService.fetchProfile(token) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let result):
-                self.profileImageService.fetchProfileImageURL(username: result.userName) { _ in }
-                self.switchToTabBarController()
-            case .failure(let error):
+    private func fetchProfile(token: String) {
+        profileService.fetchProfile(token) {[weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else {return}
+                switch result {
+                case .success (let result):
+                    self.profileImageService.fetchProfileImageURL(userName: result.userName) { _ in }
+                    self.switchToTabBarController()
+                case .failure:
+                    self.showAlertViewController()
+                    break
+                }
                 UIBlockingProgressHUD.dismiss()
-                print("Error fetching profile: \(error.localizedDescription)")
-                break
             }
         }
     }
