@@ -21,6 +21,7 @@
 		948CBC462A1A6ED200437FEE /* ExtensionURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CBC452A1A6ED200437FEE /* ExtensionURLSession.swift */; };
 		948CBC492A236ADC00437FEE /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 948CBC482A236ADC00437FEE /* Kingfisher */; };
 		948CBC4C2A239ED800437FEE /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 948CBC4B2A239ED800437FEE /* SwiftKeychainWrapper */; };
+		948CBC4E2A23A15800437FEE /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CBC4D2A23A15800437FEE /* TabBarController.swift */; };
 		94A54CC429C6E1E80019F0DC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A54CC329C6E1E80019F0DC /* AppDelegate.swift */; };
 		94A54CC629C6E1E80019F0DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */; };
 		94A54CCB29C6E1E80019F0DC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94A54CC929C6E1E80019F0DC /* Main.storyboard */; };
@@ -43,13 +44,14 @@
 		9439951129FAFA66005C7779 /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
 		9439951429FF9D46005C7779 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		948CBC452A1A6ED200437FEE /* ExtensionURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionURLSession.swift; sourceTree = "<group>"; };
+		948CBC4D2A23A15800437FEE /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		94A54CC029C6E1E80019F0DC /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		94A54CC329C6E1E80019F0DC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		94A54CCA29C6E1E80019F0DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		94A54CCC29C6E1E90019F0DC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		94A54CCF29C6E1E90019F0DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		94A54CD129C6E1E90019F0DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		94A54CD129C6E1E90019F0DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		94C1F96D2A06AF2F0031F7A6 /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
 		94C1F96F2A0F9EC40031F7A6 /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
 		94C1F9712A1130760031F7A6 /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				94A54CC929C6E1E80019F0DC /* Main.storyboard */,
+				948CBC4D2A23A15800437FEE /* TabBarController.swift */,
 				9439951629FFFA9D005C7779 /* SplashViewController */,
 				9439951329FAFECB005C7779 /* OAuth2 */,
 				9439950B29EBFE82005C7779 /* Profile */,
@@ -263,6 +266,7 @@
 				94133A5029DEF66700F77564 /* ProfileViewController.swift in Sources */,
 				9439951529FF9D46005C7779 /* SplashViewController.swift in Sources */,
 				9411E76229C891A8002B63AF /* ImagesListViewController.swift in Sources */,
+				948CBC4E2A23A15800437FEE /* TabBarController.swift in Sources */,
 				9439951229FAFA66005C7779 /* OAuth2TokenStorage.swift in Sources */,
 				94C1F96E2A06AF2F0031F7A6 /* UIBlockingProgressHUD.swift in Sources */,
 				9439950929EBFE18005C7779 /* AuthViewController.swift in Sources */,
