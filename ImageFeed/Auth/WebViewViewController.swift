@@ -16,45 +16,56 @@ protocol WebViewViewControllerDelegate: AnyObject {
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
 }
 
-
+//MARK: - WebViewViewController
 final class WebViewViewController: UIViewController {
 
-    @IBOutlet private weak var progressView: UIProgressView!
-    @IBOutlet private var webView: WKWebView!
     private var estimatedProgressObservation: NSKeyValueObservation?
-    @IBAction private func didTapBackButton(_ sender: Any) {
-        delegate?.webViewViewControllerDidCancel(self)
-    }
-    fileprivate let UnsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
-
     weak var delegate: WebViewViewControllerDelegate?
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
+    //MARK: - UISetUP
+    private let webView: WKWebView = {
+        let webView = WKWebView()
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        return webView
+    }()
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-    }
+    private let progressView: UIProgressView = {
+        let progressView = UIProgressView()
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        let backgroundColor = UIColor(red: 26/255, green: 27/255, blue: 34/255, alpha: 0.5)
+        progressView.tintColor = backgroundColor
+        return progressView
+    }()
+
+    private let backButton: UIButton = {
+        let backButton = UIButton()
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.setTitle("", for: .normal)
+        backButton.setImage(UIImage(named: "nav_back_button"), for: .normal)
+        backButton.imageView?.contentMode = .scaleAspectFill
+        backButton.addTarget(nil, action: #selector(didTapBackButton), for: .touchUpInside)
+        return backButton
+    }()
+
+
     //MARK: - ViewLifeCicle
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        createWebViewLayout()
+
         webView.navigationDelegate = self
-
-        var urlComponents = URLComponents(string: UnsplashAuthorizeURLString)!
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: accessKey),
-            URLQueryItem(name: "redirect_uri", value: redirectURI),
-            URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: accessScope)
-        ]
-        let url = urlComponents.url!
-
-        let request = URLRequest(url: url)
+        let request = URLRequest(url: createAuthURL())
         webView.load(request)
-
         configureProgressBarObserver()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
     }
 
     //MARK: - Private Methods
@@ -63,7 +74,19 @@ final class WebViewViewController: UIViewController {
         progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
     }
 
-    private func configureProgressBarObserver(){        // Обновление шкалы загрузки
+    private func createAuthURL() -> URL {
+        var urlComponents = URLComponents(string: "https://unsplash.com/oauth/authorize")!
+        urlComponents.queryItems = [
+            URLQueryItem(name: "client_id", value: accessKey),
+            URLQueryItem(name: "redirect_uri", value: redirectURI),
+            URLQueryItem(name: "response_type", value: "code"),
+            URLQueryItem(name: "scope", value: accessScope)
+        ]
+        let url  = urlComponents.url!
+        return url
+    }
+
+    private func configureProgressBarObserver() {        // Обновление шкалы загрузки
         estimatedProgressObservation = webView.observe(
             \.estimatedProgress,
              options: [],
@@ -71,6 +94,35 @@ final class WebViewViewController: UIViewController {
                  guard let self = self else {return}
                  self.updateProgress()
              })
+    }
+
+    private func createWebViewLayout() {
+        view.backgroundColor = .white
+
+        view.addSubview(webView)
+        view.addSubview(backButton)
+        view.addSubview(progressView)
+
+        NSLayoutConstraint.activate([
+            webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            webView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+
+            backButton.widthAnchor.constraint(equalToConstant: 24),
+            backButton.heightAnchor.constraint(equalToConstant: 24),
+            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+
+            progressView.centerYAnchor.constraint(equalTo: backButton.centerYAnchor),
+            progressView.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: 8),
+            progressView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -29)
+        ])
+
+    }
+
+        @objc func didTapBackButton(_ sender: Any?) {
+        delegate?.webViewViewControllerDidCancel(self)
     }
 }
 

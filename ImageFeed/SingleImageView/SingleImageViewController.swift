@@ -11,24 +11,61 @@ final class SingleImageViewController: UIViewController {
         }
     }
 
-    @IBOutlet private var scrollView: UIScrollView!
-    @IBOutlet private var imageView: UIImageView!
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.minimumZoomScale = 0.1
+        scrollView.maximumZoomScale = 1.25
+        return scrollView
+    }()
+
+    private let imageView: UIImageView =  {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+
+    private let backButton: UIButton = {
+        let backButton = UIButton()
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.setTitle("", for: .normal)
+        backButton.setImage(UIImage(named: "chevron.backward"), for: .normal)
+        backButton.imageView?.contentMode = .scaleAspectFill
+        backButton.addTarget(nil, action: #selector(didTapBackButton), for: .touchUpInside)
+        return backButton
+    }()
+
+    private let shareButton: UIButton = {
+        let shareButton = UIButton()
+        shareButton.translatesAutoresizingMaskIntoConstraints = false
+        shareButton.setTitle("", for: .normal)
+        shareButton.setImage(UIImage(named: "share_button"), for: .normal)
+        shareButton.addTarget(nil, action: #selector(didTapShareButton), for: .touchUpInside)
+        return shareButton
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.image = image
+        createSingleImageView()
+        scrollView.delegate = self
         rescaleAndCenterImageInScrollView(image: image)
-        scrollView.minimumZoomScale = 0.1
-        scrollView.maximumZoomScale = 1.25
-    }
+}
 
-    @IBAction private func didTapBackButton(_ sender: Any) {
+    @objc private func didTapBackButton(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
 
-    @IBAction private func didTapShareButton(_ sender: UIButton) {
-        let share = UIActivityViewController(activityItems: [image as Any], applicationActivities: nil)
-        present(share, animated: true, completion: nil)
+    @objc private func didTapShareButton(_ sender: UIButton) {
+        guard let image = image else { return }
+        let vc = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        ///Показ UIActivityViewController
+        if let popoverPresentationController = vc.popoverPresentationController {
+            popoverPresentationController.sourceView = sender
+            popoverPresentationController.sourceRect = sender.bounds
+        }
+        present(vc, animated: true)
     }
 
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
@@ -48,19 +85,67 @@ final class SingleImageViewController: UIViewController {
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
     }
 
-    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
-        let imageViewSize = view?.frame.size
-        let scrollViewSize = scrollView.bounds.size
+    private func createSingleImageView() {
+        view.backgroundColor = UIColor(red: 26/255, green: 27/255, blue: 34/255, alpha: 0.5)
 
-        let verticalPadding = imageViewSize!.height < scrollViewSize.height ? (scrollViewSize.height - imageViewSize!.height) / 2 : 0
-        let horizontalPadding = imageViewSize!.width < scrollViewSize.width ? (scrollViewSize.width - imageViewSize!.width) / 2 : 0
+        view.addSubview(scrollView)
+        scrollView.addSubview(imageView)
+        view.addSubview(backButton)
+        view.addSubview(shareButton)
 
-        scrollView.contentInset = UIEdgeInsets(top: verticalPadding, left: horizontalPadding, bottom: verticalPadding, right: horizontalPadding)
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+
+            imageView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            imageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+
+            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 15),
+            backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 9),
+            backButton.widthAnchor.constraint(equalToConstant: 24),
+            backButton.heightAnchor.constraint(equalToConstant: 24),
+
+            shareButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -51),
+            shareButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            shareButton.widthAnchor.constraint(equalToConstant: 50),
+            shareButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
     }
+
 }
 
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        imageView
+        return imageView
+    }
+
+    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+        centerImageInScrollView()
+    }
+
+    private func centerImageInScrollView() {
+        guard let image = imageView.image else { return }
+        _ = image.size
+        let boundsSize = scrollView.bounds.size
+
+        var frameToCenter = imageView.frame
+
+        if frameToCenter.size.width < boundsSize.width {
+            frameToCenter.origin.x = (boundsSize.width - frameToCenter.size.width) / 2.0
+        } else {
+            frameToCenter.origin.x = 0
+        }
+
+        if frameToCenter.size.height < boundsSize.height {
+            frameToCenter.origin.y = (boundsSize.height - frameToCenter.size.height) / 2.0
+        } else {
+            frameToCenter.origin.y = 0
+        }
+
+        imageView.frame = frameToCenter
     }
 }

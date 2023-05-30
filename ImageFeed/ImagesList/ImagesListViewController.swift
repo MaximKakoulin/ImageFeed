@@ -2,36 +2,63 @@ import UIKit
 
 final class ImagesListViewController: UIViewController {
 
-    @IBOutlet private var tableView: UITableView!
+    //MARK: - Properties
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
+
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
         formatter.timeStyle = .none
         return formatter
     }()
+
+    private let tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        return tableView
+    }()
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
 
+    //MARK: - LifeCircle
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+        createTableViewLayout()
+
+        ///Настраиваем ячейку таблицы "из кода" (обычно это делается из viewDidLoad)
+        tableView.register(ImagesListCell.self, forCellReuseIdentifier: "ImagesListCell")
+        tableView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0 )
+        tableView.delegate = self
+        tableView.dataSource = self
     }
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showSingleImageSegueIdentifier {
-            let viewController = segue.destination as! SingleImageViewController
-            let indexPath = sender as! IndexPath
-            let image = UIImage(named: photosName[indexPath.row])
-            viewController.image = image
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
+    //MARK: - Methods
+
+    private func createTableViewLayout() {
+
+        view.addSubview(tableView)
+        tableView.backgroundColor = UIColor(red: 26/255, green: 27/255, blue: 34/255, alpha: 0.5)
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+    }
+
+    private func presentSingleImageView(for indexPath: IndexPath) {
+        let singleImageVC = SingleImageViewController()
+        let image = UIImage(named: photosName[indexPath.row])
+        singleImageVC.image = image
+        singleImageVC.modalPresentationStyle = .fullScreen
+        present(singleImageVC, animated: true, completion: nil)
     }
 }
 
+//MARK: - UITableViewDataSource
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return photosName.count
@@ -50,25 +77,32 @@ extension ImagesListViewController: UITableViewDataSource {
     }
 }
 
+//MARK: - Extension ImagesListViewController
 extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        guard let image = UIImage(named: photosName[indexPath.row]) else {
+        let imageName = "\(indexPath.row)"
+
+        guard let image = UIImage(named: imageName) else { return }
+        let date =  dateFormatter.string(from: Date())
+        let isLiked = indexPath.row % 2 == 0
+        guard let likedImage = isLiked ? UIImage(named: "Button like ON") : UIImage(named: "Button like OFF") else {
             return
         }
+        cell.configureCellElements(image: image, date: date, likeImage: likedImage)
 
-        cell.cellImage.image = image
-        cell.dateLabel.text = dateFormatter.string(from: Date())
-
-        let isLiked = indexPath.row % 2 == 0
-        let likeImage = isLiked ? UIImage(named: "Button like ON") : UIImage(named: "Button like OFF")
-        cell.likeButton.setImage(likeImage, for: .normal)
+        let selectedView = UIView()
+        selectedView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2)
+        cell.selectedBackgroundView = selectedView
     }
 }
 
+    //MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: showSingleImageSegueIdentifier, sender: indexPath)
-        tableView.deselectRow(at: indexPath, animated: true)
+        if let cell = tableView.cellForRow(at: indexPath) as? ImagesListCell {
+            cell.isSelected = false
+        }
+        presentSingleImageView(for: indexPath)
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
