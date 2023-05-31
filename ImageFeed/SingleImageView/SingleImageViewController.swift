@@ -86,7 +86,7 @@ final class SingleImageViewController: UIViewController {
     }
 
     private func createSingleImageView() {
-        view.backgroundColor = UIColor(red: 26/255, green: 27/255, blue: 34/255, alpha: 0.5)
+        view.backgroundColor = .YPBlack
 
         view.addSubview(scrollView)
         scrollView.addSubview(imageView)

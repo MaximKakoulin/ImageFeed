@@ -32,8 +32,7 @@ final class WebViewViewController: UIViewController {
     private let progressView: UIProgressView = {
         let progressView = UIProgressView()
         progressView.translatesAutoresizingMaskIntoConstraints = false
-        let backgroundColor = UIColor(red: 26/255, green: 27/255, blue: 34/255, alpha: 0.5)
-        progressView.tintColor = backgroundColor
+        progressView.tintColor = .YPBackground
         return progressView
     }()
 
@@ -97,7 +96,7 @@ final class WebViewViewController: UIViewController {
     }
 
     private func createWebViewLayout() {
-        view.backgroundColor = .white
+        view.backgroundColor = .YPWhite
 
         view.addSubview(webView)
         view.addSubview(backButton)

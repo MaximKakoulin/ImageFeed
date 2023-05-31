@@ -13,7 +13,7 @@ final class ProfileViewController: UIViewController {
 
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
-    let tokenStorage = OAuth2TokenStorage()
+    private let tokenStorage = OAuth2TokenStorage()
 
     private var profileImageServiceObserver: NSObjectProtocol? // Объявляем проперти для хранения обсервера
 
@@ -65,7 +65,7 @@ final class ProfileViewController: UIViewController {
         view.addSubview(nameLabel)
         nameLabel.text = "Екатерина Новикова"
         nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
-        nameLabel.textColor = UIColor.white
+        nameLabel.textColor = UIColor.YPWhite
     }
 
     private func createLoginNameLabel(safeArea: UILayoutGuide) {
@@ -74,7 +74,7 @@ final class ProfileViewController: UIViewController {
         view.addSubview(loginNameLabel)
         loginNameLabel.text = "@nov_ekaterina"
         loginNameLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        loginNameLabel.textColor = UIColor.lightGray
+        loginNameLabel.textColor = UIColor.YPGrey
     }
 
     private func createDescriptionLabel(safeArea: UILayoutGuide) {
@@ -83,7 +83,7 @@ final class ProfileViewController: UIViewController {
         view.addSubview(descriptionLabel)
         descriptionLabel.text = "Hello world!"
         descriptionLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-        descriptionLabel.textColor = UIColor.white
+        descriptionLabel.textColor = UIColor.YPWhite
     }
 
     private func createLogoutButton(safeArea: UILayoutGuide) {
@@ -94,18 +94,22 @@ final class ProfileViewController: UIViewController {
         )
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(logoutButton)
-        logoutButton.tintColor = .red
+        logoutButton.tintColor = .YPRed
     }
 
     private func profileUISetup() {
-        configureConstraints()
+        view.backgroundColor = .YPBlack
+
         createAvatarImage(safeArea: view.safeAreaLayoutGuide)
         createNameLabel(safeArea: view.safeAreaLayoutGuide)
         createLoginNameLabel(safeArea: view.safeAreaLayoutGuide)
         createDescriptionLabel(safeArea: view.safeAreaLayoutGuide)
         createLogoutButton(safeArea: view.safeAreaLayoutGuide)
+
+        configureConstraints()
         updateProfileDetails(profile: profileService.profile)
         updateAvatar()
+        subscribeForAvatarUpdates()
     }
 
     private func updateProfileDetails(profile: Profile?) {

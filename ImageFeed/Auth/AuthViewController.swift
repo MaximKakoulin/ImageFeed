@@ -36,9 +36,9 @@ final class AuthViewController: UIViewController {
     private let enterButton: UIButton = {
         let enterButton = UIButton()
         enterButton.translatesAutoresizingMaskIntoConstraints = false
-        enterButton.backgroundColor = .white
+        enterButton.backgroundColor = .YPWhite
         enterButton.setTitle("Войти", for: .normal)
-        enterButton.setTitleColor(.black, for: .normal)
+        enterButton.setTitleColor(.YPBlack, for: .normal)
         enterButton.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
         enterButton.layer.cornerRadius = 16
         enterButton.layer.masksToBounds = true
@@ -54,7 +54,7 @@ final class AuthViewController: UIViewController {
     }
 
     private func createAuthViewLayout() {
-        view.backgroundColor = .black
+        view.backgroundColor = .YPBlack
 
         view.addSubview(enterButton)
         view.addSubview(authViewLogo)

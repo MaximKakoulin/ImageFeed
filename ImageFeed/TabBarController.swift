@@ -12,8 +12,8 @@ final class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tabBar.isTranslucent = false
-        tabBar.barTintColor = .black
-        tabBar.tintColor = .white
+        tabBar.barTintColor = .YPBlack
+        tabBar.tintColor = .YPWhite
 
     let imagesListViewController = ImagesListViewController()
         imagesListViewController.tabBarItem = UITabBarItem(

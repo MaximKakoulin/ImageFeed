@@ -40,7 +40,7 @@ final class ImagesListViewController: UIViewController {
     private func createTableViewLayout() {
 
         view.addSubview(tableView)
-        tableView.backgroundColor = UIColor(red: 26/255, green: 27/255, blue: 34/255, alpha: 0.5)
+        tableView.backgroundColor = .YPBlack
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -70,6 +70,8 @@ extension ImagesListViewController: UITableViewDataSource {
         guard let imageListCell = cell as? ImagesListCell else {
             return UITableViewCell()
         }
+
+        imageListCell.backgroundColor = .YPBlack
 
         configCell(for: imageListCell, with: indexPath)
 

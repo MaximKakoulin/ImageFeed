@@ -22,6 +22,7 @@
 		948CBC492A236ADC00437FEE /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 948CBC482A236ADC00437FEE /* Kingfisher */; };
 		948CBC4C2A239ED800437FEE /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 948CBC4B2A239ED800437FEE /* SwiftKeychainWrapper */; };
 		948CBC4E2A23A15800437FEE /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CBC4D2A23A15800437FEE /* TabBarController.swift */; };
+		948CBC502A276D0300437FEE /* UIColor Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CBC4F2A276D0300437FEE /* UIColor Extension.swift */; };
 		94A54CC429C6E1E80019F0DC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A54CC329C6E1E80019F0DC /* AppDelegate.swift */; };
 		94A54CC629C6E1E80019F0DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */; };
 		94A54CCB29C6E1E80019F0DC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94A54CC929C6E1E80019F0DC /* Main.storyboard */; };
@@ -45,6 +46,7 @@
 		9439951429FF9D46005C7779 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		948CBC452A1A6ED200437FEE /* ExtensionURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionURLSession.swift; sourceTree = "<group>"; };
 		948CBC4D2A23A15800437FEE /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		948CBC4F2A276D0300437FEE /* UIColor Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor Extension.swift"; sourceTree = "<group>"; };
 		94A54CC029C6E1E80019F0DC /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		94A54CC329C6E1E80019F0DC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 				94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */,
 				9439950629EAEC60005C7779 /* Constants.swift */,
 				948CBC452A1A6ED200437FEE /* ExtensionURLSession.swift */,
+				948CBC4F2A276D0300437FEE /* UIColor Extension.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -264,6 +267,7 @@
 				94A54CC429C6E1E80019F0DC /* AppDelegate.swift in Sources */,
 				9411E76429CB0ADF002B63AF /* ImagesListCell.swift in Sources */,
 				94133A5029DEF66700F77564 /* ProfileViewController.swift in Sources */,
+				948CBC502A276D0300437FEE /* UIColor Extension.swift in Sources */,
 				9439951529FF9D46005C7779 /* SplashViewController.swift in Sources */,
 				9411E76229C891A8002B63AF /* ImagesListViewController.swift in Sources */,
 				948CBC4E2A23A15800437FEE /* TabBarController.swift in Sources */,

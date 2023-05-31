@@ -10,7 +10,7 @@ final class ImagesListCell: UITableViewCell {
         let dateLabel = UILabel()
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         dateLabel.font = .systemFont(ofSize: 13)
-        dateLabel.textColor = .white
+        dateLabel.textColor = .YPWhite
         return dateLabel
     }()
     private let cellImage: UIImageView = {
