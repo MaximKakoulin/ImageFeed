@@ -23,6 +23,7 @@
 		948CBC4C2A239ED800437FEE /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 948CBC4B2A239ED800437FEE /* SwiftKeychainWrapper */; };
 		948CBC4E2A23A15800437FEE /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CBC4D2A23A15800437FEE /* TabBarController.swift */; };
 		948CBC502A276D0300437FEE /* UIColor Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CBC4F2A276D0300437FEE /* UIColor Extension.swift */; };
+		948CBC532A28A84500437FEE /* ImagesListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CBC522A28A84500437FEE /* ImagesListService.swift */; };
 		94A54CC429C6E1E80019F0DC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A54CC329C6E1E80019F0DC /* AppDelegate.swift */; };
 		94A54CC629C6E1E80019F0DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */; };
 		94A54CCB29C6E1E80019F0DC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94A54CC929C6E1E80019F0DC /* Main.storyboard */; };
@@ -47,6 +48,7 @@
 		948CBC452A1A6ED200437FEE /* ExtensionURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionURLSession.swift; sourceTree = "<group>"; };
 		948CBC4D2A23A15800437FEE /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		948CBC4F2A276D0300437FEE /* UIColor Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor Extension.swift"; sourceTree = "<group>"; };
+		948CBC522A28A84500437FEE /* ImagesListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListService.swift; sourceTree = "<group>"; };
 		94A54CC029C6E1E80019F0DC /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		94A54CC329C6E1E80019F0DC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 			children = (
 				9411E76129C891A8002B63AF /* ImagesListViewController.swift */,
 				9411E76329CB0ADF002B63AF /* ImagesListCell.swift */,
+				948CBC522A28A84500437FEE /* ImagesListService.swift */,
 			);
 			path = ImagesList;
 			sourceTree = "<group>";
@@ -139,6 +142,7 @@
 		948CBC442A1A6EAB00437FEE /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				94A54CC929C6E1E80019F0DC /* Main.storyboard */,
 				94A54CD129C6E1E90019F0DC /* Info.plist */,
 				94A54CC329C6E1E80019F0DC /* AppDelegate.swift */,
 				94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */,
@@ -147,6 +151,14 @@
 				948CBC4F2A276D0300437FEE /* UIColor Extension.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		948CBC512A28A80B00437FEE /* TabBarController */ = {
+			isa = PBXGroup;
+			children = (
+				948CBC4D2A23A15800437FEE /* TabBarController.swift */,
+			);
+			path = TabBarController;
 			sourceTree = "<group>";
 		};
 		94A54CB729C6E1E80019F0DC = {
@@ -168,8 +180,7 @@
 		94A54CC229C6E1E80019F0DC /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
-				94A54CC929C6E1E80019F0DC /* Main.storyboard */,
-				948CBC4D2A23A15800437FEE /* TabBarController.swift */,
+				948CBC512A28A80B00437FEE /* TabBarController */,
 				9439951629FFFA9D005C7779 /* SplashViewController */,
 				9439951329FAFECB005C7779 /* OAuth2 */,
 				9439950B29EBFE82005C7779 /* Profile */,
@@ -277,6 +288,7 @@
 				9439950729EAEC60005C7779 /* Constants.swift in Sources */,
 				94133A5429DF265700F77564 /* SingleImageViewController.swift in Sources */,
 				9439950E29EC00AE005C7779 /* WebViewViewController.swift in Sources */,
+				948CBC532A28A84500437FEE /* ImagesListService.swift in Sources */,
 				9439951029FACBFD005C7779 /* OAuth2Service.swift in Sources */,
 				94C1F9722A1130760031F7A6 /* ProfileImageService.swift in Sources */,
 				94A54CC629C6E1E80019F0DC /* SceneDelegate.swift in Sources */,
