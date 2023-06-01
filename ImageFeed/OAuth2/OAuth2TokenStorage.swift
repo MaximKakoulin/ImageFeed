@@ -9,10 +9,6 @@ import UIKit
 import SwiftKeychainWrapper
 
 
-
-
-
-
 class OAuth2TokenStorage {
     private let keychainWrapper = KeychainWrapper.standard
 
