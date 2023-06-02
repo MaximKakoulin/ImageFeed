@@ -1,8 +1,12 @@
 import UIKit
+import Kingfisher
 
 
 
 final class SingleImageViewController: UIViewController {
+
+    var fullImageUrl: URL?
+
     var image: UIImage! {
         didSet {
             guard isViewLoaded else { return }
@@ -45,6 +49,15 @@ final class SingleImageViewController: UIViewController {
         return shareButton
     }()
 
+    init(fullImageUrl: URL? = nil) {
+        super.init(nibName: nil, bundle: nil)
+        self.fullImageUrl = fullImageUrl
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.image = image
@@ -85,6 +98,23 @@ final class SingleImageViewController: UIViewController {
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
     }
 
+    func fetchFullImage() {
+        guard let fullImageUrl = fullImageUrl else { return }
+        UIBlockingProgressHUD.show()
+        imageView.kf.setImage(with: fullImageUrl) { [weak self] result in
+            guard let self = self else {return}
+            UIBlockingProgressHUD.dismiss()
+            switch result {
+            case .success(let resultImage):
+                createSingleImageView()
+                self.rescaleAndCenterImageInScrollView(image: resultImage.image)
+            case .failure:
+                self.showError()
+            }
+        }
+
+    }
+
     private func createSingleImageView() {
         view.backgroundColor = .YPBlack
 
@@ -116,6 +146,22 @@ final class SingleImageViewController: UIViewController {
         ])
     }
 
+    private func showError() {
+        let alertVC = UIAlertController(
+            title: "Что-то пошло не так(",
+            message: "Повторим еще раз?",
+            preferredStyle: .alert)
+        let actionNo = UIAlertAction(title: "Не надо", style: .default) { [weak self] _ in
+            self?.dismiss(animated: true)
+        }
+        let actionAgain = UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
+            self?.fetchFullImage()
+        }
+
+        alertVC.addAction(actionNo)
+        alertVC.addAction(actionAgain)
+        present(alertVC, animated: true)
+    }
 }
 
 extension SingleImageViewController: UIScrollViewDelegate {
