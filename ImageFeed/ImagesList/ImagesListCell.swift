@@ -1,10 +1,15 @@
 import UIKit
+import Kingfisher
 
 
+protocol ImagesListCellDelegate: AnyObject {
+    func imageListCellDidTapLike(_ cell: ImagesListCell)
+}
 
 final class ImagesListCell: UITableViewCell {
     //MARK: - Properties
     static let reuseIdentifier = "ImagesListCell"
+    weak var delegate: ImagesListCellDelegate?
 
     private let dateLabel: UILabel = {
         let dateLabel = UILabel()
@@ -13,7 +18,7 @@ final class ImagesListCell: UITableViewCell {
         dateLabel.textColor = .YPWhite
         return dateLabel
     }()
-    private let cellImage: UIImageView = {
+     let cellImage: UIImageView = {
         let cellImage = UIImageView()
         cellImage.translatesAutoresizingMaskIntoConstraints = false
         cellImage.layer.cornerRadius = 16
@@ -24,6 +29,7 @@ final class ImagesListCell: UITableViewCell {
         let likeButton = UIButton()
         likeButton.translatesAutoresizingMaskIntoConstraints = false
         likeButton.setTitle("", for: .normal)
+        likeButton.addTarget(nil, action: #selector(likeButtonClicked), for: .touchUpInside)
         return  likeButton
     }()
 
@@ -38,10 +44,15 @@ final class ImagesListCell: UITableViewCell {
         assertionFailure("Error")
     }
 
-    func configureCellElements(image: UIImage, date: String, likeImage: UIImage) {
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        cellImage.kf.cancelDownloadTask() // Отменяет загрузку, чтобы не словить баги
+    }
+
+    func configureCellElements(image: UIImage, date: String, isLiked: Bool) {
         cellImage.image = image
         dateLabel.text = date
-        likeButton.setImage(likeImage, for: .normal)
+        setIsLiked(isLiked)
     }
 
     private func createCell() {
@@ -64,6 +75,18 @@ final class ImagesListCell: UITableViewCell {
             cellImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             cellImage.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
         ])
+    }
+
+    func setIsLiked(_ isLiked: Bool) {
+        if isLiked {
+            likeButton.setImage(UIImage(named: "isLiked"), for: .normal)
+        } else {
+            likeButton.setImage(UIImage(named:"isUnliked"), for: .normal)
+        }
+    }
+
+    @objc private func likeButtonClicked() {
+        delegate?.imageListCellDidTapLike(self)
     }
 }
 
