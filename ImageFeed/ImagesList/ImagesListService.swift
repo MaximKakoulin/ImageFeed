@@ -5,7 +5,7 @@
 //  Created by Максим on 01.06.2023.
 //
 
-import Foundation
+import UIKit
 
 
 //MARK: - Models
