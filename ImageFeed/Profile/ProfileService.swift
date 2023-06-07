@@ -44,6 +44,7 @@ final class ProfileService {
     }
 }
 
+//MARK: - Structs
 struct ProfileResult: Codable {
     let userName: String
     let firstName: String

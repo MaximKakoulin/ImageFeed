@@ -7,14 +7,7 @@ final class SingleImageViewController: UIViewController {
 
     var fullImageUrl: URL?
 
-    var image: UIImage! {
-        didSet {
-            guard isViewLoaded else { return }
-            imageView.image = image
-            rescaleAndCenterImageInScrollView(image: image)
-        }
-    }
-
+    //MARK: - UISetUp
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -58,12 +51,11 @@ final class SingleImageViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageView.image = image
-        createSingleImageView()
+        fetchFullImage()
         scrollView.delegate = self
-        rescaleAndCenterImageInScrollView(image: image)
 }
 
     @objc private func didTapBackButton(_ sender: Any) {
@@ -71,7 +63,7 @@ final class SingleImageViewController: UIViewController {
     }
 
     @objc private func didTapShareButton(_ sender: UIButton) {
-        guard let image = image else { return }
+        guard let image = imageView.image else { return }
         let vc = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         ///Показ UIActivityViewController
         if let popoverPresentationController = vc.popoverPresentationController {
@@ -112,7 +104,6 @@ final class SingleImageViewController: UIViewController {
                 self.showError()
             }
         }
-
     }
 
     private func createSingleImageView() {
@@ -164,6 +155,7 @@ final class SingleImageViewController: UIViewController {
     }
 }
 
+//MARK: - Delegate + Centring
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView

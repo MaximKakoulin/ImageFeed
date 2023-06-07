@@ -12,9 +12,9 @@ import UIKit
 final class OAuth2Service {
     private var task: URLSessionTask?
     private var lastCode: String?
-    static let shared = OAuth2Service() // объявляем экземпляра класса OAuth2Service в виде Singleton - означает, что                              // в приложение будет только экземпляр этого класса
+    static let shared = OAuth2Service() // объявляем экземпляра класса OAuth2Service в виде Singleton - означает, что                                                               // в приложение будет только экземпляр этого класса
     
-    private let urlSession = URLSession.shared // Создание экземпляра класса URLSession для выполнения HTTP-запросов.                                       //Этот экземпляр создается один раз при создании объекта OAuth2Services.
+    private let urlSession = URLSession.shared // Создание экземпляра класса URLSession для выполнения HTTP-запросов.                                                                      //Этот экземпляр создается один раз при создании объекта OAuth2Services.
     
     private (set) var authToken: String? {     // Свойство для сохранение токена аутентификации
         get {
@@ -24,32 +24,46 @@ final class OAuth2Service {
             OAuth2TokenStorage().token = newValue
         }
     }
-    
+
+     //MARK: - Methods
     // Сейчас мы объявляем метод fetchOAuthToken для выполнения запроса на получение токена аутентификации
     func fetchOAuthToken(_ code: String, completion: @escaping(Result<String, Error>) -> Void ) {
         ///проверка что метод вызывается из главного потока
         assert(Thread.isMainThread)
-        if lastCode == code {return}
-        task?.cancel()
+
+        if lastCode == code {
+            return
+        }
+        guard task == nil else { return }
         lastCode = code
-        let request = authTokenRequest(code: code)
-        let task = object(for: request) { [weak self] result in
-            DispatchQueue.main.async {
-                guard let self = self else {return}
-                switch result {
-                case .success(let body):
-                    let authToken = body.accessToken
-                    self.authToken = authToken
-                    completion(.success(authToken))//в случае успеха, токен аутентификации извлекается из ответа на запрос и сохраняется в OAuth2TokenStorage и в свойстве authToken
-                    self.task = nil
-                case .failure(let error):
-                    completion(.failure(error))
-                    self.lastCode = nil
-                }
+
+        var urlComponents = URLComponents(string: tokenURL)!
+        urlComponents.queryItems = [
+            URLQueryItem(name: "client_id", value: accessKey),
+            URLQueryItem(name: "client_secret", value: secretKey),
+            URLQueryItem(name: "redirect_uri", value: redirectURI),
+            URLQueryItem(name: "code", value: code),
+            URLQueryItem(name: "grant_type", value: "authorization_code")
+        ]
+        var request = URLRequest(url: urlComponents.url!)
+        request.httpMethod = "POST"
+
+        let dataTask = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+            guard let self else { print("self is not exist"); return }
+            switch result {
+            case .success(let data):
+                let authToken = data.accessToken
+                self.authToken = authToken
+                completion(.success(authToken))
+                self.task = nil
+            case .failure(let error):
+                completion(.failure(error))
+                self.task = nil
+                self.lastCode = nil
             }
         }
-        self.task = task
-        task.resume()
+        task = dataTask
+        task?.resume()
     }
 
     private func makeRequest(code: String) -> URLRequest {

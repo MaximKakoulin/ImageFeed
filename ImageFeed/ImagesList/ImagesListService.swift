@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 //MARK: - Models
 struct Photo {
     let id: String
@@ -85,7 +86,7 @@ final class ImagesListService {
                     for photoResult in photoResults {
                         self.photos.append(self.convertPhoto(photoResult))
                     }
-                    ///Оповещаем об изменении массива фотографий
+                    //Оповещаем об изменении массива фотографий
                     NotificationCenter.default.post(
                         name: ImagesListService.DidChangeNotification,
                         object: nil)
@@ -136,11 +137,9 @@ final class ImagesListService {
             switch result {
             case .success(_):
                 DispatchQueue.main.async {
-                    ///Поиск индекса элемента
+                    //Поиск индекса элемента
                     if let index = self.photos.firstIndex(where: {$0.id == photoId}) {
-                        // Текущий элемент
                         let photo = self.photos[index]
-                        //Копия элемента с инвертированным значением isLiked
                         let newPhoto = Photo(
                             id: photo.id,
                             size: photo.size,
@@ -150,7 +149,7 @@ final class ImagesListService {
                             largeImageURL: photo.largeImageURL,
                             likedByUser: !photo.likedByUser
                         )
-                        ///Подменяем элемент в массиве
+                        //Подменяем элемент в массиве
                         self.photos[index] = newPhoto
                         completion(.success(()))
                     }

@@ -26,6 +26,7 @@ final class ImagesListViewController: UIViewController {
 
         tableView.register(ImagesListCell.self, forCellReuseIdentifier: "ImagesListCell")
         tableView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0 )
+
         tableView.delegate = self
         tableView.dataSource = self
 
@@ -151,7 +152,7 @@ extension ImagesListViewController: UITableViewDelegate {
     }
 }
 
-//MARK: - Delegate for button like
+//MARK: - Delegate for buttonLike
 extension ImagesListViewController: ImagesListCellDelegate {
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }

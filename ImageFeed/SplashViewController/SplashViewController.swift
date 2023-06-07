@@ -20,6 +20,7 @@ final class SplashViewController: UIViewController {
 
     private var splashLogoImage: UIImageView!
 
+    //MARK: - LifeCycle
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         createSplashLogoImage(safeArea: view.safeAreaLayoutGuide)
@@ -40,6 +41,7 @@ final class SplashViewController: UIViewController {
         .lightContent
     }
 
+    //MARK: - Methods
     func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
             assertionFailure("Invalid config")
@@ -59,6 +61,7 @@ final class SplashViewController: UIViewController {
     }
 }
 
+//MARK: - Create splash logo image
 extension SplashViewController {
     private func createSplashLogoImage(safeArea: UILayoutGuide) {
         view.backgroundColor = .YPBlack
@@ -73,11 +76,11 @@ extension SplashViewController {
         NSLayoutConstraint.activate([
             splashLogoImage.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             splashLogoImage.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-             ])
+        ])
     }
 }
 
-
+//MARK: - Delegate
 extension SplashViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
         dismiss(animated: true) { [weak self] in
@@ -123,7 +126,7 @@ extension SplashViewController: AuthViewControllerDelegate {
             title: "Что-то пошло не так",
             message: "Не удалось войти в систему",
             preferredStyle: .alert
-            )
+        )
         let action = UIAlertAction(title: "OK", style: .default)
         alertVC.addAction(action)
     }
