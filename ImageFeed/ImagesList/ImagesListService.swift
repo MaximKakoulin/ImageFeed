@@ -7,7 +7,7 @@
 
 import Foundation
 
-
+//MARK: - Models
 struct Photo {
     let id: String
     let size: CGSize
@@ -50,14 +50,15 @@ extension Photo {
     }
 }
 
-
+//MARK: - ImagesListService
 final class ImagesListService {
+    private let oAuthTokenStorage = OAuth2TokenStorage()
     static let didChangeNotification = Notification.Name(rawValue: "imagesListServiceDidChange")
 
     private var currentPage = 1
     private var isFetching = false
 
-    private var photos: [Photo] = [] {
+    private (set) var photos: [Photo] = [] {
         didSet {
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
@@ -65,36 +66,38 @@ final class ImagesListService {
         }
     }
 
+    //MARK: - Methods
     func fetchPhotosNextPage() {
         guard !isFetching else { return }
         isFetching = true
 
         let url = URL(string: "https://api.unsplash.com/photos?page=\(currentPage)&per_page=10")!
         var request = URLRequest(url: url)
-        request.setValue("Client-ID YOUR_ACCESS_KEY", forHTTPHeaderField: "Authorization")
+        if let token = oAuthTokenStorage.token {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
-        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-            guard let data = data, error == nil else {
-                print("Error fetching photos: \(error?.localizedDescription ?? "Unknown error")")
-                self?.isFetching = false
-                return
-            }
+            URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+                guard let data = data, error == nil else {
+                    print("Error fetching photos: \(error?.localizedDescription ?? "Unknown error")")
+                    self?.isFetching = false
+                    return
+                }
 
-            do {
-                let decoder = JSONDecoder()
-                let photoResults = try decoder.decode([PhotoResult].self, from: data)
-                let newPhotos = photoResults.map { Photo(photoResult: $0) }
+                do {
+                    let decoder = JSONDecoder()
+                    let photoResults = try decoder.decode([PhotoResult].self, from: data)
+                    let newPhotos = photoResults.map { Photo(photoResult: $0) }
 
-                DispatchQueue.main.async {
-                    self?.photos.append(contentsOf: newPhotos)
-                    self?.currentPage += 1
+                    DispatchQueue.main.async {
+                        self?.photos.append(contentsOf: newPhotos)
+                        self?.currentPage += 1
+                        self?.isFetching = false
+                    }
+                } catch {
+                    print("Error decoding photos: \(error.localizedDescription)")
                     self?.isFetching = false
                 }
-            } catch {
-                print("Error decoding photos: \(error.localizedDescription)")
-                self?.isFetching = false
-            }
-        }.resume()
+            }.resume()
+        }
     }
 }
-
