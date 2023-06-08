@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 
 
@@ -36,6 +37,12 @@ final class ImagesListCell: UITableViewCell {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         assertionFailure("Error")
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        //отменяем загрузку во избежании багов
+        cellImage.kf.cancelDownloadTask()
     }
 
     func configureCellElements(image: UIImage, date: String, likeImage: UIImage) {

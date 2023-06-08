@@ -153,7 +153,6 @@
 		9439951629FFFA9D005C7779 /* SplashViewController */ = {
 			isa = PBXGroup;
 			children = (
-				94C1F96D2A06AF2F0031F7A6 /* UIBlockingProgressHUD.swift */,
 				9439951429FF9D46005C7779 /* SplashViewController.swift */,
 			);
 			path = SplashViewController;
@@ -162,6 +161,7 @@
 		948CBC442A1A6EAB00437FEE /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				94C1F96D2A06AF2F0031F7A6 /* UIBlockingProgressHUD.swift */,
 				94A54CC929C6E1E80019F0DC /* Main.storyboard */,
 				94A54CD129C6E1E90019F0DC /* Info.plist */,
 				94A54CC329C6E1E80019F0DC /* AppDelegate.swift */,

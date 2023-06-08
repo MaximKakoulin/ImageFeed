@@ -85,6 +85,7 @@ final class ImagesListService {
 
                 do {
                     let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
                     let photoResults = try decoder.decode([PhotoResult].self, from: data)
                     let newPhotos = photoResults.map { Photo(photoResult: $0) }
 

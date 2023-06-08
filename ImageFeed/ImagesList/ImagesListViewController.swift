@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class ImagesListViewController: UIViewController {
 
@@ -7,6 +8,7 @@ final class ImagesListViewController: UIViewController {
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     var photos: [Photo] = []
     private let imageListService = ImagesListService()
+    private var photoImageServiceObserver: NSObjectProtocol?
 
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -30,14 +32,26 @@ final class ImagesListViewController: UIViewController {
         super.viewDidLoad()
         createTableViewLayout()
 
-        ///Настраиваем ячейку таблицы "из кода" (обычно это делается из viewDidLoad)
         tableView.register(ImagesListCell.self, forCellReuseIdentifier: "ImagesListCell")
         tableView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0 )
         tableView.delegate = self
         tableView.dataSource = self
+
+        subscribeForPhotoUpdates()
+        imageListService.fetchPhotosNextPage()
     }
 
     //MARK: - Methods
+
+    private func subscribeForPhotoUpdates() {
+        photoImageServiceObserver = NotificationCenter.default.addObserver(
+            forName: ImagesListService.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.updateTableViewAnimated()
+        }
+    }
 
     private func createTableViewLayout() {
 
@@ -95,7 +109,7 @@ extension ImagesListViewController: UITableViewDataSource {
     }
 }
 
-//MARK: - Extension ImagesListViewController
+//MARK: - Extension ImagesListViewController - Протягиваем данные из класса ImageListCell
 extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         let imageName = "\(indexPath.row)"
@@ -124,9 +138,7 @@ extension ImagesListViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let image = UIImage(named: photosName[indexPath.row]) else {
-            return 0
-        }
+        let image = photos[indexPath.row]
 
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
