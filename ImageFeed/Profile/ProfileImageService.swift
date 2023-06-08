@@ -8,9 +8,6 @@
 import UIKit
 
 
-
-
-
 final class ProfileImageService {
     static let shared = ProfileImageService()
     private let tokenStorage = OAuth2TokenStorage()
@@ -20,6 +17,8 @@ final class ProfileImageService {
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     static let didChangeNotification = Notification.Name("ProfileImageProviderDidChange")
+
+    private init() {}
 
 // MARK: - Methods
     func fetchProfileImageURL(userName: String, _ completion: @escaping (Result<String, Error>) -> Void) {

@@ -1,16 +1,13 @@
 import UIKit
+import Kingfisher
 
 
 
 final class SingleImageViewController: UIViewController {
-    var image: UIImage! {
-        didSet {
-            guard isViewLoaded else { return }
-            imageView.image = image
-            rescaleAndCenterImageInScrollView(image: image)
-        }
-    }
 
+    var fullImageUrl: URL?
+
+    //MARK: - UISetUp
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -45,12 +42,20 @@ final class SingleImageViewController: UIViewController {
         return shareButton
     }()
 
+    init(fullImageUrl: URL? = nil) {
+        super.init(nibName: nil, bundle: nil)
+        self.fullImageUrl = fullImageUrl
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageView.image = image
-        createSingleImageView()
+        fetchFullImage()
         scrollView.delegate = self
-        rescaleAndCenterImageInScrollView(image: image)
 }
 
     @objc private func didTapBackButton(_ sender: Any) {
@@ -58,7 +63,7 @@ final class SingleImageViewController: UIViewController {
     }
 
     @objc private func didTapShareButton(_ sender: UIButton) {
-        guard let image = image else { return }
+        guard let image = imageView.image else { return }
         let vc = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         ///Показ UIActivityViewController
         if let popoverPresentationController = vc.popoverPresentationController {
@@ -83,6 +88,22 @@ final class SingleImageViewController: UIViewController {
         let x = (newContentSize.width - visibleRectSize.width) / 2
         let y = (newContentSize.height - visibleRectSize.height) / 2
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
+    }
+
+    func fetchFullImage() {
+        guard let fullImageUrl = fullImageUrl else { return }
+        UIBlockingProgressHUD.show()
+        imageView.kf.setImage(with: fullImageUrl) { [weak self] result in
+            guard let self = self else {return}
+            UIBlockingProgressHUD.dismiss()
+            switch result {
+            case .success(let resultImage):
+                createSingleImageView()
+                self.rescaleAndCenterImageInScrollView(image: resultImage.image)
+            case .failure:
+                self.showError()
+            }
+        }
     }
 
     private func createSingleImageView() {
@@ -116,8 +137,25 @@ final class SingleImageViewController: UIViewController {
         ])
     }
 
+    private func showError() {
+        let alertVC = UIAlertController(
+            title: "Что-то пошло не так(",
+            message: "Повторим еще раз?",
+            preferredStyle: .alert)
+        let actionNo = UIAlertAction(title: "Не надо", style: .default) { [weak self] _ in
+            self?.dismiss(animated: true)
+        }
+        let actionAgain = UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
+            self?.fetchFullImage()
+        }
+
+        alertVC.addAction(actionNo)
+        alertVC.addAction(actionAgain)
+        present(alertVC, animated: true)
+    }
 }
 
+//MARK: - Delegate + Centring
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView

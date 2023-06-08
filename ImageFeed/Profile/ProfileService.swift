@@ -15,6 +15,8 @@ final class ProfileService {
     private var fetchProfileTask: URLSessionTask?
     private let urlSession = URLSession.shared
 
+    private init() {}
+
     //MARK: - Metoths
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         fetchProfileTask?.cancel()
@@ -42,6 +44,7 @@ final class ProfileService {
     }
 }
 
+//MARK: - Structs
 struct ProfileResult: Codable {
     let userName: String
     let firstName: String

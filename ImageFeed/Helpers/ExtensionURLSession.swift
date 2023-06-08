@@ -7,6 +7,20 @@
 
 import UIKit
 
+extension JSONDecoder {
+    static var shared: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return decoder
+    }()
+}
+
+enum NetworkError: Error {
+    case httpStatusCode(Int)
+    case urlRequestError(Error)
+    case urlSessionError
+    case decodingError
+}
 
 extension URLSession {
     func objectTask<T:Decodable>(for request: URLRequest, completion: @escaping (Result<T, Error>) -> Void) -> URLSessionTask {
@@ -18,9 +32,8 @@ extension URLSession {
         let task = dataTask(with: request) { data, response, error in
             if let data = data, let response = response as? HTTPURLResponse {
                 if 200..<300 ~= response.statusCode {
-                    let jsonDecoder = JSONDecoder()
                     do {
-                        let decodedModel = try jsonDecoder.decode(T.self, from: data)
+                        let decodedModel = try JSONDecoder.shared.decode(T.self, from: data)
                         fulfilCompletion(.success(decodedModel))
                     } catch {
                         fulfilCompletion(.failure(NetworkError.decodingError))

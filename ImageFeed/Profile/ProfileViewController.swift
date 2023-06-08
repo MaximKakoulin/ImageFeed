@@ -1,5 +1,8 @@
 import UIKit
 import Kingfisher
+import ProgressHUD
+import SwiftKeychainWrapper
+import WebKit
 
 
 
@@ -143,6 +146,39 @@ final class ProfileViewController: UIViewController {
             self.updateAvatar()
         }
         updateAvatar()
+    }
+
+    //MARK: - Alert logout button
+    @objc private func logoutButtonTapped() {
+        let alert = UIAlertController(title: "Пока, Пока!", message: "Уверены, что хотите выйти?", preferredStyle: .alert)
+
+        let yesAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            guard let self = self else {return}
+            self.accountLogout()
+        }
+        let noAction = UIAlertAction(title: "Нет", style: .cancel, handler: nil)
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+        present(alert, animated: true, completion: nil)
+
+    }
+
+    //MARK: - Account Logout
+    private func accountLogout() {
+        tokenStorage.deleteToken()
+        UIBlockingProgressHUD.show()
+        //Чистим куки из хранилища
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            //Массив полученных записей удаляем из хранилища
+            records.forEach { record in
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+            }
+        }
+        let window = UIApplication.shared.windows.first
+        let splashVC = SplashViewController()
+        window?.rootViewController = splashVC
+        UIBlockingProgressHUD.dismiss()
     }
 }
 
