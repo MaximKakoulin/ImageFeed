@@ -15,7 +15,7 @@ struct Photo {
     let welcomeDescription: String?
     let thumbImageURL: String
     let largeImageURL: String
-    let isLiked: Bool
+    let likedByUser: Bool
 }
 
 struct PhotoResult: Codable {
@@ -27,6 +27,18 @@ struct PhotoResult: Codable {
     let color: String?
     let description: String?
     let urls: UrlsResult
+    let likedByUser: Bool
+}
+
+struct LikeResult: Codable {
+    let photo: PhotoResult
+    let user: User
+}
+
+struct User: Codable {
+    let id: String
+    let username: String
+    let name: String
 }
 
 struct UrlsResult: Codable {
@@ -37,6 +49,7 @@ struct UrlsResult: Codable {
     let thumb: String
 }
 
+//MARK: - Расширение для декодинга
 extension Photo {
     init(photoResult: PhotoResult) {
         id = photoResult.id
@@ -46,7 +59,7 @@ extension Photo {
         welcomeDescription = photoResult.description
         thumbImageURL = photoResult.urls.thumb
         largeImageURL = photoResult.urls.regular
-        isLiked = false
+        likedByUser = false
     }
 }
 
@@ -55,6 +68,8 @@ final class ImagesListService {
     private let oAuthTokenStorage = OAuth2TokenStorage()
     static let didChangeNotification = Notification.Name(rawValue: "imagesListServiceDidChange")
 
+    private var task: URLSessionTask?
+    private let urlSession = URLSession.shared
     private var currentPage = 1
     private var isFetching = false
 
@@ -101,4 +116,48 @@ final class ImagesListService {
             }.resume()
         }
     }
+
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+        var urlComponents = URLComponents(string: "https://api.unsplash.com")
+        urlComponents?.path = "/photos/\(photoId)/like"
+
+        guard let url = urlComponents?.url else {return}
+
+        var request = URLRequest(url: url)
+        guard let token = oAuthTokenStorage.token else {return}
+        request.httpMethod = isLike ? "POST" : "DELETE"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        let dataTask = urlSession.objectTask(for: request) { [weak self] (result: Result<LikeResult, Error>) in
+            guard let self = self else {return}
+            switch result {
+            case .success(_):
+                DispatchQueue.main.async {
+                    ///Поиск индекса элемента
+                    if let index = self.photos.firstIndex(where: {$0.id == photoId}) {
+                        // Текущий элемент
+                        let photo = self.photos[index]
+                        //Копия элемента с инвертированным значением isLiked
+                        let newPhoto = Photo(
+                            id: photo.id,
+                            size: photo.size,
+                            createdAt: photo.createdAt,
+                            welcomeDescription: photo.welcomeDescription,
+                            thumbImageURL: photo.thumbImageURL,
+                            largeImageURL: photo.largeImageURL,
+                            likedByUser: !photo.likedByUser
+                        )
+                        ///Подменяем элемент в массиве
+                        self.photos[index] = newPhoto
+                        completion(.success(()))
+                    }
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
+        }
+        dataTask.resume()
+   }
 }

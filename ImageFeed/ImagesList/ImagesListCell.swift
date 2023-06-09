@@ -28,7 +28,8 @@ final class ImagesListCell: UITableViewCell {
         let likeButton = UIButton()
         likeButton.translatesAutoresizingMaskIntoConstraints = false
         likeButton.setTitle("", for: .normal)
-        return  likeButton
+        likeButton.addTarget(nil, action: #selector(likeButtonClicked), for: .touchUpInside)
+        return likeButton
     }()
 
     //MARK: - Methods
@@ -48,10 +49,10 @@ final class ImagesListCell: UITableViewCell {
         cellImage.kf.cancelDownloadTask()
     }
 
-    func configureCellElements(image: UIImage, date: String, likeImage: UIImage) {
+    func configureCellElements(image: UIImage, date: String, likeImage: Bool) {
         cellImage.image = image
         dateLabel.text = date
-        likeButton.setImage(likeImage, for: .normal)
+        setIsLiked(likeImage)
     }
 
     private func createCell() {
@@ -74,6 +75,18 @@ final class ImagesListCell: UITableViewCell {
             cellImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             cellImage.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
         ])
+    }
+
+    func setIsLiked(_ isLiked: Bool) {
+        if isLiked {
+            likeButton.setImage(UIImage(named: "ButtonLikeOn"), for: .normal)
+        } else {
+            likeButton.setImage(UIImage(named:"ButtonLikeOff"), for: .normal)
+        }
+    }
+
+    @objc private func likeButtonClicked() {
+        delegate?.imageListCellDidTapLike(self)
     }
 }
 
