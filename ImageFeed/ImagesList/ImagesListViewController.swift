@@ -2,7 +2,6 @@ import UIKit
 import Kingfisher
 
 final class ImagesListViewController: UIViewController {
-
     //MARK: - Properties
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
@@ -112,6 +111,7 @@ extension ImagesListViewController: UITableViewDataSource {
 
         imageListCell.backgroundColor = .YPBlack
 
+        imageListCell.delegate = self
         configCell(for: imageListCell, with: indexPath)
 
         return imageListCell
@@ -121,14 +121,22 @@ extension ImagesListViewController: UITableViewDataSource {
 //MARK: - Extension ImagesListViewController - Протягиваем данные из класса ImageListCell
 extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-            guard let date = photos[indexPath.row].createdAt else { return }
-            let dateString = date.dateTimeString
+        guard let date = photos[indexPath.row].createdAt else { return }
+        let dateString = date.dateTimeString
 
-            guard let url = URL(string: photos[indexPath.row].thumbImageURL) else {return}
-            cell.cellImage.kf.indicatorType = .activity
-            cell.cellImage.kf.setImage(with: url, placeholder: UIImage(named: "image_placeholder")) { [weak self] result in
-                self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+        guard let url = URL(string: photos[indexPath.row].thumbImageURL) else {return}
+        cell.cellImage.kf.indicatorType = .activity
+        cell.cellImage.kf.setImage(with: url, placeholder: UIImage(named: "image_placeholder")) { [weak self] result in
+            guard let self = self else {return}
+            switch result {
+            case .success(let image):
+                cell.configureCellElements(image: image.image, date: dateString, likeImage: photos[indexPath.row].likedByUser)
+                self.tableView.reloadRows(at: [indexPath], with: .automatic)
+            case .failure(_):
+                guard let placeholderImage = UIImage(named: "image_placeholder") else { return }
+                cell.configureCellElements(image: placeholderImage, date: "Error", likeImage: false)
             }
+        }
 
         let selectedView = UIView()
         selectedView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2)
@@ -136,7 +144,7 @@ extension ImagesListViewController {
     }
 }
 
-    //MARK: - UITableViewDelegate
+//MARK: - UITableViewDelegate
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) as? ImagesListCell {
@@ -161,4 +169,41 @@ extension ImagesListViewController: UITableViewDelegate {
         imageListService.fetchPhotosNextPage()
     }
 }
+    //MARK: - реализуем делегат для кнопки лайка
+    extension ImagesListViewController: ImagesListCellDelegate {
+        func imageListCellDidTapLike(_ cell: ImagesListCell) {
+            guard let indexPath = tableView.indexPath(for: cell) else { return }
+
+            let photo = photos[indexPath.row]
+            UIBlockingProgressHUD.show()
+            imageListService.changeLike(photoId: photo.id, isLike: !photo.likedByUser) { [weak self] result in
+                guard let self = self else {return}
+                switch result {
+                case .success:
+                    DispatchQueue.main.async {
+                        //синх. массив картинок с сервисом
+                        self.photos = self.imageListService.photos
+                        cell.setIsLiked(self.photos[indexPath.row].likedByUser)
+                        UIBlockingProgressHUD.dismiss()
+                    }
+                case .failure:
+                    DispatchQueue.main.async {
+                        UIBlockingProgressHUD.dismiss()
+                        self.showAlertViewController()
+                    }
+                }
+            }
+        }
+
+        private func showAlertViewController() {
+            let alertVC = UIAlertController(
+                title: "Что-то пошло не так",
+                message: "Не удалось поставить лайк:(",
+                preferredStyle: .alert)
+            let action = UIAlertAction(title: "Ok", style: .default)
+            alertVC.addAction(action)
+            present(alertVC, animated: true)
+        }
+    }
+
 
