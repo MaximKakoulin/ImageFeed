@@ -34,11 +34,20 @@ final class ImagesListViewController: UIViewController {
 
         tableView.register(ImagesListCell.self, forCellReuseIdentifier: "ImagesListCell")
         tableView.contentInset = UIEdgeInsets(top: 16, left: 0, bottom: 16, right: 0 )
+
         tableView.delegate = self
         tableView.dataSource = self
 
         subscribeForPhotoUpdates()
         imageListService.fetchPhotosNextPage()
+
+        NotificationCenter.default.addObserver(
+            forName: ImagesListService.didChangeNotification,
+            object: nil,
+            queue: .main) { [weak self] _ in
+                guard let self else {return}
+                self.updateTableViewAnimated()
+            }
     }
 
     //MARK: - Methods
@@ -112,15 +121,14 @@ extension ImagesListViewController: UITableViewDataSource {
 //MARK: - Extension ImagesListViewController - Протягиваем данные из класса ImageListCell
 extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        let imageName = "\(indexPath.row)"
+            guard let date = photos[indexPath.row].createdAt else { return }
+            let dateString = date.dateTimeString
 
-        guard let image = UIImage(named: imageName) else { return }
-        let date =  dateFormatter.string(from: Date())
-        let isLiked = indexPath.row % 2 == 0
-        guard let likedImage = isLiked ? UIImage(named: "Button like ON") : UIImage(named: "Button like OFF") else {
-            return
-        }
-        cell.configureCellElements(image: image, date: date, likeImage: likedImage)
+            guard let url = URL(string: photos[indexPath.row].thumbImageURL) else {return}
+            cell.cellImage.kf.indicatorType = .activity
+            cell.cellImage.kf.setImage(with: url, placeholder: UIImage(named: "image_placeholder")) { [weak self] result in
+                self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+            }
 
         let selectedView = UIView()
         selectedView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2)

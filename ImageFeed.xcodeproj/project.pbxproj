@@ -24,7 +24,7 @@
 		948CBC4E2A23A15800437FEE /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CBC4D2A23A15800437FEE /* TabBarController.swift */; };
 		948CBC502A276D0300437FEE /* UIColor Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CBC4F2A276D0300437FEE /* UIColor Extension.swift */; };
 		948CBC532A28A84500437FEE /* ImagesListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CBC522A28A84500437FEE /* ImagesListService.swift */; };
-		948CBC7B2A32223100437FEE /* ImageFeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CBC7A2A32223100437FEE /* ImageFeedTests.swift */; };
+		948CBC822A33747600437FEE /* Date Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CBC812A33747600437FEE /* Date Extension.swift */; };
 		94A54CC429C6E1E80019F0DC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A54CC329C6E1E80019F0DC /* AppDelegate.swift */; };
 		94A54CC629C6E1E80019F0DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */; };
 		94A54CCB29C6E1E80019F0DC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94A54CC929C6E1E80019F0DC /* Main.storyboard */; };
@@ -61,7 +61,7 @@
 		948CBC4F2A276D0300437FEE /* UIColor Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor Extension.swift"; sourceTree = "<group>"; };
 		948CBC522A28A84500437FEE /* ImagesListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListService.swift; sourceTree = "<group>"; };
 		948CBC782A32223100437FEE /* ImageFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		948CBC7A2A32223100437FEE /* ImageFeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFeedTests.swift; sourceTree = "<group>"; };
+		948CBC812A33747600437FEE /* Date Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date Extension.swift"; sourceTree = "<group>"; };
 		94A54CC029C6E1E80019F0DC /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		94A54CC329C6E1E80019F0DC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		94A54CC529C6E1E80019F0DC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -169,6 +169,7 @@
 				9439950629EAEC60005C7779 /* Constants.swift */,
 				948CBC452A1A6ED200437FEE /* ExtensionURLSession.swift */,
 				948CBC4F2A276D0300437FEE /* UIColor Extension.swift */,
+				948CBC812A33747600437FEE /* Date Extension.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -181,19 +182,10 @@
 			path = TabBarController;
 			sourceTree = "<group>";
 		};
-		948CBC792A32223100437FEE /* ImageFeedTests */ = {
-			isa = PBXGroup;
-			children = (
-				948CBC7A2A32223100437FEE /* ImageFeedTests.swift */,
-			);
-			path = ImageFeedTests;
-			sourceTree = "<group>";
-		};
 		94A54CB729C6E1E80019F0DC = {
 			isa = PBXGroup;
 			children = (
 				94A54CC229C6E1E80019F0DC /* ImageFeed */,
-				948CBC792A32223100437FEE /* ImageFeedTests */,
 				94A54CC129C6E1E80019F0DC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -334,7 +326,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				948CBC7B2A32223100437FEE /* ImageFeedTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -352,6 +343,7 @@
 				948CBC4E2A23A15800437FEE /* TabBarController.swift in Sources */,
 				9439951229FAFA66005C7779 /* OAuth2TokenStorage.swift in Sources */,
 				94C1F96E2A06AF2F0031F7A6 /* UIBlockingProgressHUD.swift in Sources */,
+				948CBC822A33747600437FEE /* Date Extension.swift in Sources */,
 				9439950929EBFE18005C7779 /* AuthViewController.swift in Sources */,
 				9439950729EAEC60005C7779 /* Constants.swift in Sources */,
 				94133A5429DF265700F77564 /* SingleImageViewController.swift in Sources */,

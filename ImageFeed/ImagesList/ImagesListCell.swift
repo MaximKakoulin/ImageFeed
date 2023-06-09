@@ -1,11 +1,14 @@
 import UIKit
 import Kingfisher
 
-
+protocol ImagesListCellDelegate: AnyObject {
+    func imageListCellDidTapLike(_ cell: ImagesListCell)
+}
 
 final class ImagesListCell: UITableViewCell {
     //MARK: - Properties
     static let reuseIdentifier = "ImagesListCell"
+    weak var delegate: ImagesListCellDelegate?
 
     private let dateLabel: UILabel = {
         let dateLabel = UILabel()
@@ -14,7 +17,7 @@ final class ImagesListCell: UITableViewCell {
         dateLabel.textColor = .YPWhite
         return dateLabel
     }()
-    private let cellImage: UIImageView = {
+     let cellImage: UIImageView = {
         let cellImage = UIImageView()
         cellImage.translatesAutoresizingMaskIntoConstraints = false
         cellImage.layer.cornerRadius = 16
