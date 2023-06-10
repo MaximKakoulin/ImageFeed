@@ -1,6 +1,6 @@
 import UIKit
 import Kingfisher
-
+import WebKit
 
 
 final class ProfileViewController: UIViewController {
@@ -87,14 +87,15 @@ final class ProfileViewController: UIViewController {
     }
 
     private func createLogoutButton(safeArea: UILayoutGuide) {
-        logoutButton = UIButton.systemButton(
-            with: UIImage(named: "ipad.and.arrow.forward") ?? UIImage(),
-            target: self,
-            action: nil
-        )
+        let logoutButton = UIButton()
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
+        logoutButton.setTitle("", for: .normal)
+        logoutButton.setImage(UIImage(named: "logout_button"), for: .normal)
+        logoutButton.imageView?.contentMode = .scaleAspectFill
+        logoutButton.addTarget(nil, action: #selector(logoutButtonTapped), for: .touchUpInside)
         view.addSubview(logoutButton)
         logoutButton.tintColor = .YPRed
+        self.logoutButton = logoutButton
     }
 
     private func profileUISetup() {
@@ -143,6 +144,39 @@ final class ProfileViewController: UIViewController {
             self.updateAvatar()
         }
         updateAvatar()
+    }
+
+    //MARK: - Алерт по кнопку выхода
+    @objc private func logoutButtonTapped() {
+        let alert = UIAlertController(title: "Пока, Пока!", message: "Уверены, что хотите выйти?", preferredStyle: .alert)
+
+        let yesAction = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+            guard let self = self else {return}
+            self.accountLogout()
+        }
+        let noAction = UIAlertAction(title: "Нет", style: .cancel, handler: nil)
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+        present(alert, animated: true, completion: nil)
+
+    }
+
+    //MARK: - Логаут из аккаунта
+    private func accountLogout() {
+        tokenStorage.deleteToken()
+        UIBlockingProgressHUD.show()
+        //Чистим куки из хранилища
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            //Массив полученных записей удаляем из хранилища
+            records.forEach { record in
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+            }
+        }
+        let window = UIApplication.shared.windows.first
+        let splashVC = SplashViewController()
+        window?.rootViewController = splashVC
+        UIBlockingProgressHUD.dismiss()
     }
 }
 
