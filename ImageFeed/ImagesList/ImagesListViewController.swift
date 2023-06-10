@@ -74,9 +74,8 @@ final class ImagesListViewController: UIViewController {
     }
 
     private func presentSingleImageView(for indexPath: IndexPath) {
-        let singleImageVC = SingleImageViewController()
-        let image = UIImage(named: photosName[indexPath.row])
-        singleImageVC.image = image
+        guard let url = URL(string: photos[indexPath.row].largeImageURL) else {return}
+        let singleImageVC = SingleImageViewController(fullImageUrl: url)
         singleImageVC.modalPresentationStyle = .fullScreen
         present(singleImageVC, animated: true, completion: nil)
     }
