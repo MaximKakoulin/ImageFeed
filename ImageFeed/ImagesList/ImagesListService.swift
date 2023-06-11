@@ -117,69 +117,49 @@ final class ImagesListService {
         }
     }
 
+    //MARK: - Функция лайка
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
-        // Проверяем, есть ли фотография с заданным ID в массиве photos
-        guard let index = self.photos.firstIndex(where: { $0.id == photoId }) else { return }
+        var urlComponents = URLComponents(string: "https://api.unsplash.com")
+        urlComponents?.path = "/photos/\(photoId)/like"
 
-        // Меняем значение likedbyuser у фотографии
-        let photo = self.photos[index]
-        let newPhoto = Photo(
-            id: photo.id,
-            size: photo.size,
-            createdAt: photo.createdAt,
-            welcomeDescription: photo.welcomeDescription,
-            thumbImageURL: photo.thumbImageURL,
-            largeImageURL: photo.largeImageURL,
-            likedByUser: !photo.likedByUser
-        )
+        guard let url = urlComponents?.url else {return}
 
-        // Обновляем массив photos на главном потоке
-        DispatchQueue.main.async {
-            self.photos[index] = newPhoto
-        }
-
-        // Отправляем запрос на лайк или удаление лайка фотографии
-        let urlString = "https://api.unsplash.com/photos/\(photoId)/like"
-        guard let url = URL(string: urlString) else { return }
         var request = URLRequest(url: url)
-        guard let token = tokenStorage.token else { return }
-        if newPhoto.likedByUser {
-            // Отправляем запрос на лайк фотографии
-            request.httpMethod = "POST"
-            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-            let task = URLSession.shared.dataTask(with: request) { data, response, error in
-                if let error = error {
-                    print("Error: \(error.localizedDescription)")
-                    return
+        guard let token = tokenStorage.token else {return}
+        request.httpMethod = isLike ? "POST" : "DELETE"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        let dataTask = URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) in
+            guard let self = self else {return}
+            if let error = error {
+                DispatchQueue.main.async {
+                    completion(.failure(error))
                 }
-                guard let httpResponse = response as? HTTPURLResponse,
-                      (200...299).contains(httpResponse.statusCode) else {
-                    print("Error: Invalid response")
-                    if let data = data, let responseString = String(data: data, encoding: .utf8) {
-                        print("Response: \(responseString)")
+                return
+            }
+            if let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
+                if let index = self.photos.firstIndex(where: {$0.id == photoId}) {
+                    let photo = self.photos[index]
+                    let newPhoto = Photo(
+                        id: photo.id,
+                        size: photo.size,
+                        createdAt: photo.createdAt,
+                        welcomeDescription: photo.welcomeDescription,
+                        thumbImageURL: photo.thumbImageURL,
+                        largeImageURL: photo.largeImageURL,
+                        likedByUser: !photo.likedByUser
+                    )
+                    self.photos[index] = newPhoto
+                    DispatchQueue.main.async {
+                        completion(.success(()))
                     }
-                    return
                 }
-                print("Photo liked successfully")
+            } else {
+                DispatchQueue.main.async {
+                    completion(.failure(error ?? NSError(domain: "Unknown error", code: -1, userInfo: nil)))
+                }
             }
-            task.resume()
-        } else {
-            // Отправляем запрос на удаление лайка фотографии
-            request.httpMethod = "DELETE"
-            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-            let task = URLSession.shared.dataTask(with: request) { data, response, error in
-                if let error = error {
-                    print("Error: \(error.localizedDescription)")
-                    return
-                }
-                guard let httpResponse = response as? HTTPURLResponse,
-                      (200...299).contains(httpResponse.statusCode) else {
-                    print("Error: Invalid response")
-                    return
-                }
-                print("Like removed successfully")
-            }
-            task.resume()
         }
+        dataTask.resume()
     }
 }

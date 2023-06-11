@@ -175,7 +175,7 @@ extension ImagesListViewController: UITableViewDelegate {
             guard let indexPath = tableView.indexPath(for: cell) else { return }
 
             let photo = photos[indexPath.row]
-            //UIBlockingProgressHUD.show()
+            UIBlockingProgressHUD.show()
             imageListService.changeLike(photoId: photo.id, isLike: !photo.likedByUser) { [weak self] result in
                 guard let self = self else {return}
                 switch result {
@@ -184,11 +184,11 @@ extension ImagesListViewController: UITableViewDelegate {
                         //Синхронизируем массив картинок с сервисом
                         self.photos = self.imageListService.photos
                         cell.setIsLiked(self.photos[indexPath.row].likedByUser)
-                        //UIBlockingProgressHUD.dismiss()
+                        UIBlockingProgressHUD.dismiss()
                     }
                 case .failure:
                     DispatchQueue.main.async {
-                        //UIBlockingProgressHUD.dismiss()
+                        UIBlockingProgressHUD.dismiss()
                         self.showAlertViewController()
                     }
                 }
