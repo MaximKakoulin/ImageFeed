@@ -10,14 +10,23 @@ import UIKit
 
 
 
-
+//MARK: - Протоколы
 protocol WebViewViewControllerDelegate: AnyObject {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
 }
 
+public protocol WebViewViewControllerProtocol: AnyObject {
+    var presenter: WebViewPresenterProtocol? { get set }
+    func load(request: URLRequest)
+    func setProgressValue(_ newValue: Float)
+    func setProgressHidden(_ isHidden: Bool)
+}
+
 //MARK: - WebViewViewController
-final class WebViewViewController: UIViewController {
+final class WebViewViewController: UIViewController, WebViewViewControllerProtocol {
+
+    var presenter: WebViewPresenterProtocol?
 
     private var estimatedProgressObservation: NSKeyValueObservation?
     weak var delegate: WebViewViewControllerDelegate?
@@ -54,8 +63,7 @@ final class WebViewViewController: UIViewController {
         createWebViewLayout()
 
         webView.navigationDelegate = self
-        let request = URLRequest(url: createAuthURL())
-        webView.load(request)
+        presenter?.viewDidLoad()
         configureProgressBarObserver()
     }
 
@@ -67,22 +75,17 @@ final class WebViewViewController: UIViewController {
         super.viewDidDisappear(animated)
     }
 
-    //MARK: - Private Methods
-    private func updateProgress() {
-        progressView.progress = Float(webView.estimatedProgress)
-        progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
+    //MARK: - Methods
+    func load(request: URLRequest) {
+        webView.load(request)
     }
 
-    private func createAuthURL() -> URL {
-        var urlComponents = URLComponents(string: "https://unsplash.com/oauth/authorize")!
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: accessKey),
-            URLQueryItem(name: "redirect_uri", value: redirectURI),
-            URLQueryItem(name: "response_type", value: "code"),
-            URLQueryItem(name: "scope", value: accessScope)
-        ]
-        let url  = urlComponents.url!
-        return url
+    func setProgressValue(_ newValue: Float) {
+        progressView.progress = newValue
+    }
+
+    func setProgressHidden(_ isHidden: Bool) {
+        progressView.isHidden = isHidden
     }
 
     private func configureProgressBarObserver() {        // Обновление шкалы загрузки
@@ -91,7 +94,7 @@ final class WebViewViewController: UIViewController {
              options: [],
              changeHandler: {[weak self] _, _ in
                  guard let self = self else {return}
-                 self.updateProgress()
+                 presenter?.didUpdateProgressValue(webView.estimatedProgress)
              })
     }
 
@@ -123,6 +126,16 @@ final class WebViewViewController: UIViewController {
         @objc func didTapBackButton(_ sender: Any?) {
         delegate?.webViewViewControllerDidCancel(self)
     }
+
+    //функция code(from:) - она возвращает код авторизации, если он получен
+    private func code(from navigationAction: WKNavigationAction) -> String? {
+        if
+            let url = navigationAction.request.url {
+            return presenter?.code(from: url)
+        } else {
+            return nil
+        }
+    }
 }
 
 //MARK: - Extension Delegate
@@ -137,21 +150,6 @@ extension WebViewViewController: WKNavigationDelegate {
             decisionHandler(.cancel)
         } else {
             decisionHandler(.allow)
-        }
-    }
-
-    ///функция code(from:) - она возвращает код авторизации, если он получен
-    private func code(from navigationAction: WKNavigationAction) -> String? {
-        if
-            let url = navigationAction.request.url,
-            let urlComponents = URLComponents(string: url.absoluteString),
-            urlComponents.path == "/oauth/authorize/native",
-            let items = urlComponents.queryItems,
-            let codeItem = items.first(where: { $0.name == "code" })
-        {
-            return codeItem.value
-        } else {
-            return nil
         }
     }
 }

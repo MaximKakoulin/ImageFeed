@@ -48,7 +48,14 @@ final class AuthViewController: UIViewController {
 
     @objc func enterButtonTapped() {
         let webViewViewController = WebViewViewController()
+        let authHelper = AuthHelper()
+        let webViewPresenter = WebViewPresenter(authHelper: authHelper)
+
         webViewViewController.delegate = self
+
+        webViewViewController.presenter = webViewPresenter
+        webViewPresenter.view = webViewViewController
+
         webViewViewController.modalPresentationStyle = .fullScreen
         present(webViewViewController, animated: true)
     }
@@ -74,13 +81,14 @@ final class AuthViewController: UIViewController {
 }
 
 //MARK: - Extension для AuthViewController
-    extension AuthViewController: WebViewViewControllerDelegate {
-        func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-            delegate?.authViewController(self, didAuthenticateWithCode: code)
-        }
+extension AuthViewController: WebViewViewControllerDelegate {
 
-        func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
-            dismiss(animated: true)
-        }
+    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
+        dismiss(animated: true)
     }
+
+    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        delegate?.authViewController(self, didAuthenticateWithCode: code)
+    }
+}
 
