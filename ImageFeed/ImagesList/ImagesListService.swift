@@ -7,61 +7,6 @@
 
 import Foundation
 
-//MARK: - Models
-struct Photo {
-    let id: String
-    let size: CGSize
-    let createdAt: Date?
-    let welcomeDescription: String?
-    let thumbImageURL: String
-    let largeImageURL: String
-    let likedByUser: Bool
-}
-
-struct PhotoResult: Codable {
-    let id: String
-    let createdAt: String
-    let updatedAt: String
-    let width: Int
-    let height: Int
-    let color: String?
-    let description: String?
-    let urls: UrlsResult
-    let likedByUser: Bool
-}
-
-struct LikeResult: Codable {
-    let photo: PhotoResult
-    let user: User
-}
-
-struct User: Codable {
-    let id: String
-    let username: String
-    let name: String
-}
-
-struct UrlsResult: Codable {
-    let raw: String
-    let full: String
-    let regular: String
-    let small: String
-    let thumb: String
-}
-
-//MARK: - Расширение для декодинга
-extension Photo {
-    init(photoResult: PhotoResult) {
-        id = photoResult.id
-        size = CGSize(width: photoResult.width, height: photoResult.height)
-        let dateFormatter = ISO8601DateFormatter()
-        createdAt = dateFormatter.date(from: photoResult.createdAt)
-        welcomeDescription = photoResult.description
-        thumbImageURL = photoResult.urls.thumb
-        largeImageURL = photoResult.urls.regular
-        likedByUser = false
-    }
-}
 
 //MARK: - ImagesListService
 final class ImagesListService {

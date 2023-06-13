@@ -138,7 +138,7 @@ final class ImagesListCell: UITableViewCell {
         delegate?.imageListCellDidTapLike(self)
     }
 
-    func removeAnimatedGradient() {
+    private func removeAnimatedGradient() {
         animationLayers.forEach { layers in
             layers.removeFromSuperlayer()
         }
