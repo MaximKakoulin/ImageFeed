@@ -27,6 +27,7 @@ final class SingleImageViewController: UIViewController {
     private let backButton: UIButton = {
         let backButton = UIButton()
         backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.accessibilityIdentifier = "BackButton"
         backButton.setTitle("", for: .normal)
         backButton.setImage(UIImage(named: "backButton"), for: .normal)
         backButton.imageView?.contentMode = .scaleAspectFill

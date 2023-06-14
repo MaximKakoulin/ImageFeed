@@ -66,6 +66,7 @@ struct Profile: Codable {
     var bio: String?
 }
 
+
 enum ProfileServiceError: Error {
     case invalidURL
     case invalidData

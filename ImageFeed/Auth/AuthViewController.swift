@@ -38,6 +38,7 @@ final class AuthViewController: UIViewController {
         enterButton.translatesAutoresizingMaskIntoConstraints = false
         enterButton.backgroundColor = .YPWhite
         enterButton.setTitle("Войти", for: .normal)
+        enterButton.accessibilityIdentifier = "enterButton"
         enterButton.setTitleColor(.YPBlack, for: .normal)
         enterButton.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
         enterButton.layer.cornerRadius = 16
