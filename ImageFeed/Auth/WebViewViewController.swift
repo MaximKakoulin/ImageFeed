@@ -64,7 +64,7 @@ final class WebViewViewController: UIViewController, WebViewViewControllerProtoc
         createWebViewLayout()
 
         webView.navigationDelegate = self
-        presenter?.viewDidLoad()
+        presenter?.didLoad()
         configureProgressBarObserver()
     }
 
@@ -114,12 +114,12 @@ final class WebViewViewController: UIViewController, WebViewViewControllerProtoc
 
             backButton.widthAnchor.constraint(equalToConstant: 24),
             backButton.heightAnchor.constraint(equalToConstant: 24),
-            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8),
 
-            progressView.centerYAnchor.constraint(equalTo: backButton.centerYAnchor),
-            progressView.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: 8),
-            progressView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -29)
+            progressView.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 5),
+            progressView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            progressView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
 
     }

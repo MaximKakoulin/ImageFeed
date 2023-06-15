@@ -13,7 +13,6 @@ protocol AuthHelperProtocol {
     func code(from url: URL) -> String?
 }
 
-
 final class AuthHelper: AuthHelperProtocol {
 
     let configuration: AuthConfiguration
