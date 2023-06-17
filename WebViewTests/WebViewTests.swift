@@ -15,7 +15,7 @@ final class WebViewPresenterSpy: WebViewPresenterProtocol {
     var viewDidLoadCalled: Bool = false
     var view: WebViewViewControllerProtocol?
 
-    func viewDidLoad() {
+    func didLoad() {
         viewDidLoadCalled = true
     }
 
@@ -69,7 +69,7 @@ final class WebViewTests: XCTestCase {
         viewController.presenter = presenter
         presenter.view = viewController
         //when
-        presenter.viewDidLoad()
+        presenter.didLoad()
         //then
         XCTAssertTrue(viewController.loadRequestCalled)
     }
