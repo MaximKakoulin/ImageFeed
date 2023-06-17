@@ -8,9 +8,6 @@
 import UIKit
 
 
-
-
-
 final class ProfileImageService {
     static let shared = ProfileImageService()
     private let tokenStorage = OAuth2TokenStorage()
@@ -55,18 +52,3 @@ final class ProfileImageService {
         task?.resume()
     }
 }
-
-// MARK: - Structs
-struct UserResult: Codable {
-    let profileImage: ProfileImage
-
-    enum CodingKeys: String, CodingKey {
-        case profileImage =  "profile_image"
-    }
-
-    struct ProfileImage: Codable {
-        let small: String
-    }
-}
-
-

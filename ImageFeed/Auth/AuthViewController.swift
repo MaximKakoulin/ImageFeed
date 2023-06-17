@@ -38,6 +38,7 @@ final class AuthViewController: UIViewController {
         enterButton.translatesAutoresizingMaskIntoConstraints = false
         enterButton.backgroundColor = .YPWhite
         enterButton.setTitle("Войти", for: .normal)
+        enterButton.accessibilityIdentifier = "enterButton"
         enterButton.setTitleColor(.YPBlack, for: .normal)
         enterButton.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
         enterButton.layer.cornerRadius = 16
@@ -48,7 +49,14 @@ final class AuthViewController: UIViewController {
 
     @objc func enterButtonTapped() {
         let webViewViewController = WebViewViewController()
+        let authHelper = AuthHelper()
+        let webViewPresenter = WebViewPresenter(authHelper: authHelper)
+
         webViewViewController.delegate = self
+
+        webViewViewController.presenter = webViewPresenter
+        webViewPresenter.view = webViewViewController
+
         webViewViewController.modalPresentationStyle = .fullScreen
         present(webViewViewController, animated: true)
     }
@@ -74,13 +82,14 @@ final class AuthViewController: UIViewController {
 }
 
 //MARK: - Extension для AuthViewController
-    extension AuthViewController: WebViewViewControllerDelegate {
-        func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-            delegate?.authViewController(self, didAuthenticateWithCode: code)
-        }
+extension AuthViewController: WebViewViewControllerDelegate {
 
-        func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
-            dismiss(animated: true)
-        }
+    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
+        dismiss(animated: true)
     }
+
+    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        delegate?.authViewController(self, didAuthenticateWithCode: code)
+    }
+}
 

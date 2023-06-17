@@ -64,6 +64,7 @@ final class ProfileViewController: UIViewController {
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(nameLabel)
         nameLabel.text = "Екатерина Новикова"
+        nameLabel.accessibilityIdentifier = "NameLabel"
         nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         nameLabel.textColor = UIColor.YPWhite
     }
@@ -73,6 +74,7 @@ final class ProfileViewController: UIViewController {
         loginNameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(loginNameLabel)
         loginNameLabel.text = "@nov_ekaterina"
+        loginNameLabel.accessibilityIdentifier = "loginNameLabel"
         loginNameLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         loginNameLabel.textColor = UIColor.YPGrey
     }
@@ -81,7 +83,8 @@ final class ProfileViewController: UIViewController {
         descriptionLabel = UILabel()
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(descriptionLabel)
-        descriptionLabel.text = "Hello world!"
+        descriptionLabel.text = "Hello, World!"
+        descriptionLabel.accessibilityIdentifier = "DescriptionLabel"
         descriptionLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         descriptionLabel.textColor = UIColor.YPWhite
     }
@@ -91,6 +94,7 @@ final class ProfileViewController: UIViewController {
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
         logoutButton.setTitle("", for: .normal)
         logoutButton.setImage(UIImage(named: "logout_button"), for: .normal)
+        logoutButton.accessibilityIdentifier = "LogoutButton"
         logoutButton.imageView?.contentMode = .scaleAspectFill
         logoutButton.addTarget(nil, action: #selector(logoutButtonTapped), for: .touchUpInside)
         view.addSubview(logoutButton)
@@ -166,6 +170,7 @@ final class ProfileViewController: UIViewController {
             guard let self = self else {return}
             self.accountLogout()
         }
+        yesAction.accessibilityIdentifier = "yesAction"
         let noAction = UIAlertAction(title: "Нет", style: .cancel, handler: nil)
         alert.addAction(yesAction)
         alert.addAction(noAction)
